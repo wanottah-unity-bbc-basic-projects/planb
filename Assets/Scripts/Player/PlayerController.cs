@@ -288,13 +288,13 @@ public class PlayerController : MonoBehaviour
 
     private void MovePlayerHorizontally()
     {
-        playerRigidbody.velocity = new Vector2(horizontalDirection, playerRigidbody.velocity.y);
+        playerRigidbody.linearVelocity = new Vector2(horizontalDirection, playerRigidbody.linearVelocity.y);
     }
 
 
     private void MovePlayerUp()
     {
-        playerRigidbody.velocity = new Vector2(playerRigidbody.velocity.x, verticalDirection);
+        playerRigidbody.linearVelocity = new Vector2(playerRigidbody.linearVelocity.x, verticalDirection);
 
         PlayerFuelController._playerFuelControllerInstance.FuelConsumption(1);
     }
@@ -302,7 +302,7 @@ public class PlayerController : MonoBehaviour
 
     private void MovePlayerDown()
     {
-        playerRigidbody.velocity = new Vector2(playerRigidbody.velocity.x, verticalDirection);
+        playerRigidbody.linearVelocity = new Vector2(playerRigidbody.linearVelocity.x, verticalDirection);
     }
 
 

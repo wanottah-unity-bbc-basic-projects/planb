@@ -129,7 +129,7 @@ public class PlayerBulletController : MonoBehaviour
             playerBulletRigidbody.velocity = new Vector2(playerBulletSpeed, playerBulletRigidbody.velocity.y);
         }*/
 
-        playerBulletRigidbody.velocity = transform.right * playerBulletSpeed;
+        playerBulletRigidbody.linearVelocity = transform.right * playerBulletSpeed;
 
         // Update ammo count
         //missileCounter.text = "" + missileCount;

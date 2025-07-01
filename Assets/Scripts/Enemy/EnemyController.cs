@@ -218,7 +218,7 @@ public class EnemyController : MonoBehaviour
     {
         attackDirection.Normalize();
 
-        enemyRigidbody.velocity = attackDirection * enemySpeed;
+        enemyRigidbody.linearVelocity = attackDirection * enemySpeed;
     }
 
 
