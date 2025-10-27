@@ -16,33 +16,11 @@ using UnityEngine.UI;
 /// </summary>
 
 //
-// modified 2020-08-04
+// v2025.10.15
 //
 
 public class GameController : MonoBehaviour
 {
-    // reference to audio controller script
-    private AudioController audioController;
-
-    // reference to atari console controller script
-    [SerializeField] private AtariConsoleController atariConsoleController;
-
-
-    // reference to player controller scripts
-    //[SerializeField] private Player1SpriteController player1SpriteController = null;
-    //[SerializeField] private Player2SpriteController player2SpriteController = null;
-    //[SerializeField] private Player2SpriteController player3SpriteController;
-    //[SerializeField] private Player2SpriteController player4SpriteController;
-
-    // reference to ball controller script
-    //public BallSpriteController ballSpriteController;
-
-
-    // reference to d-pad controllers
-    //[SerializeField] private GameObject player1Dpad;
-    //[SerializeField] private GameObject player2Dpad;
-    //[SerializeField] private GameObject player3Dpad;
-    //[SerializeField] private GameObject player4Dpad;
 
 
     // reference to text components
@@ -51,8 +29,6 @@ public class GameController : MonoBehaviour
     //public Text player3ScoreText;
     //public Text player4ScoreText;
 
-    public Text insertCoinsText;
-    public Text coinsInsertedText;
 
     public Text gameOverText;
 
@@ -65,22 +41,6 @@ public class GameController : MonoBehaviour
 
     // game credits
     [HideInInspector] public int gameCredits;
-
-
-    // player difficulty settings
-    private float leftDifficultyASpriteWidth;
-    private float leftDifficultyASpriteHeight;
-
-    private float leftDifficultyBSpriteWidth;
-    private float leftDifficultyBSpriteHeight;
-
-    private float rightDifficultyASpriteWidth;
-    private float rightDifficultyASpriteHeight;
-
-    private float rightDifficultyBSpriteWidth;
-    private float rightDifficultyBSpriteHeight;
-
-
 
 
     // player boundaries
@@ -131,22 +91,9 @@ public class GameController : MonoBehaviour
     private const int GAMEOVER_SCORE = 0;
 
 
-    public const int INSERT_COINS = 0;
-    public const int ONE_PLAYER_COINS = 1;
-    public const int MAXIMUM_COINS = 99;
-
-
-    // console initialisation
-    private const string GAME_TITLE = "PLAN B";
-    private const int TV_MODE = AtariConsoleController.BW_TV;
-
-
 
     void Start()
     {
-        // set reference to audio source component
-        audioController = AudioController.instance;
-
         Initialise();
     }
 
@@ -157,45 +104,17 @@ public class GameController : MonoBehaviour
 
         InitialiseScreenBoundaries();
 
-        InitialiseConsoleSystem();
-
-        //audioController.PlayAudioClip("Music");
-
         StartDemoMode();
     }
 
 
     private void InitialiseGameModes()
     {
-        gameCredits = INSERT_COINS;
-
-        UpdateGameCreditsText();
-
         canPlay = false;
 
         inPawzMode = false;
         inDemoMode = false;
         inPlayMode = false;
-    }
-
-
-    public void InitialiseDifficultySwitchSettings()
-    {
-        leftDifficultyASpriteWidth = 0.4f;
-
-        leftDifficultyASpriteHeight = 0.6f;
-
-        leftDifficultyBSpriteWidth = 0.4f;
-
-        leftDifficultyBSpriteHeight = 0.4f;
-
-        rightDifficultyASpriteWidth = 0.4f;
-
-        rightDifficultyASpriteHeight = 0.6f;
-
-        rightDifficultyBSpriteWidth = 0.4f;
-
-        rightDifficultyBSpriteHeight = 0.4f;
     }
 
 
@@ -208,14 +127,6 @@ public class GameController : MonoBehaviour
         //leftBoundary = -6.43f;
 
         //rightBoundary = 6.43f;
-    }
-
-
-    private void InitialiseConsoleSystem()
-    {
-        atariConsoleController.initialisingConsoleSystem = true;
-
-        atariConsoleController.InitialiseConsole(GAME_TITLE, TV_MODE);
     }
 
 
@@ -259,208 +170,19 @@ public class GameController : MonoBehaviour
     }
 
 
-    private void SetAtariConsoleMode(int consoleMode)
-    {
-        atariConsoleController.consoleMode = consoleMode;
-
-        atariConsoleController.SetConsoleMode(consoleMode);
-    }
-
-
-    public void SetTvMode(int tvMode)
-    {
-        switch (tvMode)
-        {
-            case AtariConsoleController.BW_TV:
-
-                SetClassicMode(tvMode);
-
-                break;
-
-            case AtariConsoleController.COLOUR_TV:
-
-                SetColourMode(tvMode);
-
-                break;
-        }
-    }
-
-
-    private void SetClassicMode(int tvMode)
-    {
-        SetPlayer1Colour(WHITE, WHITE, WHITE);
-
-        SetPlayer2Colour(WHITE, WHITE, WHITE);
-
-        //SetPlayer3Colour(WHITE, WHITE, WHITE);
-
-        //SetPlayer4Colour(WHITE, WHITE, WHITE);
-
-        SetBallColour(tvMode, PLAYER_ONE);
-    }
-
-
-    private void SetColourMode(int tvMode)
-    {
-        SetPlayer1Colour(RED, 0, 0);
-
-        SetPlayer2Colour(0, GREEN, 0);
-
-        //SetPlayer3Colour(0, 0, BLUE);
-
-        //SetPlayer4Colour(RED, GREEN, 0);
-
-        SetBallColour(tvMode, PLAYER_ONE);
-    }
-
-
-    private void SetPlayer1Colour(int r, int g, int b)
-    {
-        // red
-        //player1SpriteController.gameObject.GetComponent<SpriteRenderer>().material.color = new Color(r, g, b);
-
-        //player1ScoreText.color = new Color(r, g, b);
-
-        //player1Goal.gameObject.GetComponent<SpriteRenderer>().material.color = new Color(r, g, b);
-
-        //player1ScoreCounter1.gameObject.GetComponent<SpriteRenderer>().material.color = new Color(r, g, b);
-        //player1ScoreCounter2.gameObject.GetComponent<SpriteRenderer>().material.color = new Color(r, g, b);
-        //player1ScoreCounter3.gameObject.GetComponent<SpriteRenderer>().material.color = new Color(r, g, b);
-        //player1ScoreCounter4.gameObject.GetComponent<SpriteRenderer>().material.color = new Color(r, g, b);
-    }
-
-
-    private void SetPlayer2Colour(int r, int g, int b)
-    {
-        // green
-        //player2SpriteController.gameObject.GetComponent<SpriteRenderer>().material.color = new Color(r, g, b);
-
-        //player2ScoreText.color = new Color(r, g, b);
-
-        //player2Goal.gameObject.GetComponent<SpriteRenderer>().material.color = new Color(r, g, b);
-
-        //player2ScoreCounter1.gameObject.GetComponent<SpriteRenderer>().material.color = new Color(r, g, b);
-        //player2ScoreCounter2.gameObject.GetComponent<SpriteRenderer>().material.color = new Color(r, g, b);
-        //player2ScoreCounter3.gameObject.GetComponent<SpriteRenderer>().material.color = new Color(r, g, b);
-        //player2ScoreCounter4.gameObject.GetComponent<SpriteRenderer>().material.color = new Color(r, g, b);
-    }
-
-
-    private void SetPlayer3Colour(int r, int g, int b)
-    {
-        // blue
-        //player3SpriteController.gameObject.GetComponent<SpriteRenderer>().material.color = new Color(r, g, b);
-
-        //player3Goal.gameObject.GetComponent<SpriteRenderer>().material.color = new Color(r, g, b);
-
-        //player3ScoreCounter1.gameObject.GetComponent<SpriteRenderer>().material.color = new Color(r, g, b);
-        //player3ScoreCounter2.gameObject.GetComponent<SpriteRenderer>().material.color = new Color(r, g, b);
-        //player3ScoreCounter3.gameObject.GetComponent<SpriteRenderer>().material.color = new Color(r, g, b);
-        //player3ScoreCounter4.gameObject.GetComponent<SpriteRenderer>().material.color = new Color(r, g, b);
-    }
-
-
-    private void SetPlayer4Colour(int r, int g, int b)
-    {
-        // yellow
-        //player4SpriteController.gameObject.GetComponent<SpriteRenderer>().material.color = new Color(r, g, b);
-
-        //player4Goal.gameObject.GetComponent<SpriteRenderer>().material.color = new Color(r, g, b);
-
-        //player4ScoreCounter1.gameObject.GetComponent<SpriteRenderer>().material.color = new Color(r, g, b);
-        //player4ScoreCounter2.gameObject.GetComponent<SpriteRenderer>().material.color = new Color(r, g, b);
-        //player4ScoreCounter3.gameObject.GetComponent<SpriteRenderer>().material.color = new Color(r, g, b);
-        //player4ScoreCounter4.gameObject.GetComponent<SpriteRenderer>().material.color = new Color(r, g, b);
-    }
-
-
-
-    public void SetLeftDifficultyA()
-    {
-        //player1SpriteController.gameObject.transform.localScale = new Vector3(leftDifficultyASpriteWidth, leftDifficultyASpriteHeight, 0);
-    }
-
-
-    public void SetLeftDifficultyB()
-    {
-        //player1SpriteController.gameObject.transform.localScale = new Vector3(leftDifficultyBSpriteWidth, leftDifficultyBSpriteHeight, 0);
-    }
-
-
-    public void SetRightDifficultyA()
-    {
-        //player2SpriteController.gameObject.transform.localScale = new Vector3(rightDifficultyASpriteWidth, rightDifficultyASpriteHeight, 0);
-    }
-
-
-    public void SetRightDifficultyB()
-    {
-        //player2SpriteController.gameObject.transform.localScale = new Vector3(rightDifficultyBSpriteWidth, rightDifficultyBSpriteHeight, 0);
-    }
-
-
     public void SetPawzMode()
     {
         //SetGamePadControllers();
 
         //ballSpriteController.FreezeBall();
-
-        SetAtariConsoleMode(AtariConsoleController.CONSOLE_VISIBLE);
     }
 
 
     public void SetPlayMode()
     {
-        SetAtariConsoleMode(AtariConsoleController.CONSOLE_HIDDEN);
-
         //SetGamePadControllers();
 
         //ballSpriteController.ResumeBall();
-    }
-
-
-
-    public void SetBallColour(int tvMode, int player)
-    {
-        if (tvMode == AtariConsoleController.COLOUR_TV && !inDemoMode)
-        {
-            switch (player)
-            {
-                case PLAYER_ONE:
-
-                    // red
-                    //ballSpriteController.gameObject.GetComponent<SpriteRenderer>().material.color = new Color(RED, 0, 0);
-
-                    break;
-
-                case PLAYER_TWO:
-
-                    // green
-                    //ballSpriteController.gameObject.GetComponent<SpriteRenderer>().material.color = new Color(0, GREEN, 0);
-
-                    break;
-
-                case PLAYER_THREE:
-
-                    // blue
-                    //ballSpriteController.gameObject.GetComponent<SpriteRenderer>().material.color = new Color(0, 0, BLUE);
-
-                    break;
-
-                case PLAYER_FOUR:
-
-                    // yellow
-                    //ballSpriteController.gameObject.GetComponent<SpriteRenderer>().material.color = new Color(RED, GREEN, 0);
-
-                    break;
-            }
-        }
-
-        else
-        {
-            // white
-            //ballSpriteController.gameObject.GetComponent<SpriteRenderer>().material.color = new Color(WHITE, WHITE, WHITE);
-        }
     }
 
 
@@ -472,19 +194,6 @@ public class GameController : MonoBehaviour
         // start demo mode
         inDemoMode = true;
         inPlayMode = false;
-
-        atariConsoleController.SetPawzModeSwitches();
-
-        // show atari console
-        SetAtariConsoleMode(AtariConsoleController.CONSOLE_VISIBLE);
-
-        // check if there are any credits
-        if (gameCredits == INSERT_COINS)
-        {
-            insertCoinsText.gameObject.SetActive(true);
-        }
-
-        atariConsoleController.SetGameSelection();
 
         SetGameArenaBoundaries();
 
@@ -636,28 +345,11 @@ public class GameController : MonoBehaviour
     // Initialise
     private void InitialiseGameMode()
     {
-        gameCredits -= 1;
-
-        UpdateGameCreditsText();
-
-        if (gameCredits == INSERT_COINS)
-        {
-            canPlay = false;
-
-            atariConsoleController.gameNumberSelected = AtariConsoleController.NO_GAME_SELECTED;
-
-            atariConsoleController.SetGameSelection();
-        }
 
         gameOverText.gameObject.SetActive(false);
 
         inPlayMode = true;
         inDemoMode = false;
-
-        atariConsoleController.SetPawzModeSwitches();
-
-        // hide atari console
-        SetAtariConsoleMode(AtariConsoleController.CONSOLE_HIDDEN);
 
         InitialiseScore();
 
@@ -791,26 +483,6 @@ public class GameController : MonoBehaviour
         {
             GameOver(PLAYER_TWO);
         }
-
-
-        // otherwise,
-        // reset ball and set colour for player scored
-        switch (playerScored)
-        {
-            case PLAYER_ONE:
-
-                SetBallColour(atariConsoleController.tvMode, PLAYER_ONE);
-
-                break;
-
-            case PLAYER_TWO:
-
-                SetBallColour(atariConsoleController.tvMode, PLAYER_TWO);
-
-                break;
-        }
-
-        //ballSpriteController.ResetBall(ballSpriteController.ballSpeed, ballSpriteController.ballSpeed);
     }
 
 
@@ -831,12 +503,6 @@ public class GameController : MonoBehaviour
         //player3ScoreText.text = player3Score.ToString();
 
         //player4ScoreText.text = player4Score.ToString();
-    }
-
-
-    public void UpdateGameCreditsText()
-    {
-        coinsInsertedText.text = gameCredits.ToString("00");
     }
 
 
