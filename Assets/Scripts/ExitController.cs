@@ -20,8 +20,8 @@ public class ExitController : MonoBehaviour
 
     private void MoveCameraToSector(Transform destinationSector)
     {
-        CameraController._cameraControllerInstance.NewCameraPosition(
-            new Vector3(destinationSector.position.x, destinationSector.position.y, 0f));
+        //CameraController.cameraController.NewCameraPosition(
+            //new Vector3(destinationSector.position.x, destinationSector.position.y, 0f));
     }
 
 

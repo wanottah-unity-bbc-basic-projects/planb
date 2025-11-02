@@ -14,7 +14,7 @@ public class PlayerSpawnController : MonoBehaviour
 
     public void MovePlayerToSpawnPoint()
     {
-        PlayerController._playerControllerInstance.transform.position = transform.position;
+        //PlayerController._playerControllerInstance.transform.position = transform.position;
     }
 
 

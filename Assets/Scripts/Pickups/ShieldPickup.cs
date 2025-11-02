@@ -21,77 +21,77 @@ using UnityEngine;
 
 public class ShieldPickup : MonoBehaviour
 {
-    // reference to destroyed particle effect
-    public GameObject destroyedParticles;
+    //// reference to destroyed particle effect
+    //public GameObject destroyedParticles;
 
 
-    // energy value
-    public int shields;
+    //// energy value
+    //public int shields;
 
-    // score value
-    public int shieldsPickupPoints;
+    //// score value
+    //public int shieldsPickupPoints;
 
-    public float collectDelay;
+    //public float collectDelay;
 
-    private bool CanBeCollected;
-
-
-
-    // initialise health bonus and score
-    private void Start()
-    {
-        Initialise();
-    }
+    //private bool CanBeCollected;
 
 
-    private void Update()
-    {
-        WaitToCollect();
-    }
+
+    //// initialise health bonus and score
+    //private void Start()
+    //{
+    //    Initialise();
+    //}
 
 
-    private void Initialise()
-    {
-        shields = 100;
-
-        shieldsPickupPoints = 5;
-
-        collectDelay = 15f;
-
-        CanBeCollected = false;
-    }
+    //private void Update()
+    //{
+    //    WaitToCollect();
+    //}
 
 
-    private void WaitToCollect()
-    {
-        if (collectDelay > 0)
-        {
-            collectDelay -= Time.deltaTime;
-        }
+    //private void Initialise()
+    //{
+    //    shields = 100;
 
-        if (collectDelay <= 0)
-        {
-            CanBeCollected = true;
-        }
-    }
+    //    shieldsPickupPoints = 5;
+
+    //    collectDelay = 15f;
+
+    //    CanBeCollected = false;
+    //}
 
 
-    private void OnTriggerEnter2D(Collider2D collidingObject)
-    {
-        if (CanBeCollected)
-        {
-            if (collidingObject.CompareTag("Player"))
-            {
-                PlayerShieldController._playerShieldsControllerInstance.RaiseShields(shields);
+    //private void WaitToCollect()
+    //{
+    //    if (collectDelay > 0)
+    //    {
+    //        collectDelay -= Time.deltaTime;
+    //    }
 
-                ScoreController._scoreControllerInstance.AddPoints(shieldsPickupPoints);
+    //    if (collectDelay <= 0)
+    //    {
+    //        CanBeCollected = true;
+    //    }
+    //}
 
-                Instantiate(destroyedParticles, transform.position, transform.rotation);
 
-                Destroy(gameObject);
-            }
-        }
-    }
+    //private void OnTriggerEnter2D(Collider2D collidingObject)
+    //{
+    //    if (CanBeCollected)
+    //    {
+    //        if (collidingObject.CompareTag("Player"))
+    //        {
+    //            PlayerShieldController._playerShieldsControllerInstance.RaiseShields(shields);
+
+    //            ScoreController._scoreControllerInstance.AddPoints(shieldsPickupPoints);
+
+    //            Instantiate(destroyedParticles, transform.position, transform.rotation);
+
+    //            Destroy(gameObject);
+    //        }
+    //    }
+    //}
 
 
 } // end of class

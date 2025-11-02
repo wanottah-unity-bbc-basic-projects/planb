@@ -21,77 +21,77 @@ using UnityEngine;
 
 public class CoinPickup : MonoBehaviour
 {
-    // reference to destroyed particle effect
-    public GameObject destroyedParticles;
+    //// reference to destroyed particle effect
+    //public GameObject destroyedParticles;
 
 
-    // energy value
-    public int coins;
+    //// energy value
+    //public int coins;
 
-    // score value
-    public int coinsPickupPoints;
+    //// score value
+    //public int coinsPickupPoints;
 
-    public float collectDelay;
+    //public float collectDelay;
 
-    private bool CanBeCollected;
-
-
-
-    // initialise health bonus and score
-    private void Start()
-    {
-        Initialise();
-    }
+    //private bool CanBeCollected;
 
 
-    private void Update()
-    {
-        WaitToCollect();
-    }
+
+    //// initialise health bonus and score
+    //private void Start()
+    //{
+    //    Initialise();
+    //}
 
 
-    private void Initialise()
-    {
-        coins = 1;
-
-        coinsPickupPoints = 5;
-
-        collectDelay = 15f;
-
-        CanBeCollected = false;
-    }
+    //private void Update()
+    //{
+    //    WaitToCollect();
+    //}
 
 
-    private void WaitToCollect()
-    {
-        if (collectDelay > 0)
-        {
-            collectDelay -= Time.deltaTime;
-        }
+    //private void Initialise()
+    //{
+    //    coins = 1;
 
-        if (collectDelay <= 0)
-        {
-            CanBeCollected = true;
-        }
-    }
+    //    coinsPickupPoints = 5;
+
+    //    collectDelay = 15f;
+
+    //    CanBeCollected = false;
+    //}
 
 
-    private void OnTriggerEnter2D(Collider2D collidingObject)
-    {
-        if (CanBeCollected)
-        {
-            if (collidingObject.CompareTag("Player"))
-            {
-                PlayerCoinController._playerCoinControllerInstance.AddCoins(coins);
+    //private void WaitToCollect()
+    //{
+    //    if (collectDelay > 0)
+    //    {
+    //        collectDelay -= Time.deltaTime;
+    //    }
 
-                ScoreController._scoreControllerInstance.AddPoints(coinsPickupPoints);
+    //    if (collectDelay <= 0)
+    //    {
+    //        CanBeCollected = true;
+    //    }
+    //}
 
-                Instantiate(destroyedParticles, transform.position, transform.rotation);
 
-                Destroy(gameObject);
-            }
-        }
-    }
+    //private void OnTriggerEnter2D(Collider2D collidingObject)
+    //{
+    //    if (CanBeCollected)
+    //    {
+    //        if (collidingObject.CompareTag("Player"))
+    //        {
+    //            PlayerCoinController._playerCoinControllerInstance.AddCoins(coins);
+
+    //            ScoreController._scoreControllerInstance.AddPoints(coinsPickupPoints);
+
+    //            Instantiate(destroyedParticles, transform.position, transform.rotation);
+
+    //            Destroy(gameObject);
+    //        }
+    //    }
+    //}
 
 
 } // end of class

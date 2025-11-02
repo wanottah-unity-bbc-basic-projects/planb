@@ -26,39 +26,39 @@ public class DamagePlayer : MonoBehaviour
 
 
 
-    private void OnTriggerEnter2D(Collider2D collidingObject)
-    {
-        if (collidingObject.CompareTag("Player"))
-        {
-            PlayerEnergyController._playerEnergyControllerInstance.DamagePlayer(damage);
-        }
-    }
+    //private void OnTriggerEnter2D(Collider2D collidingObject)
+    //{
+    //    if (collidingObject.CompareTag("Player"))
+    //    {
+    //        PlayerEnergyController._playerEnergyControllerInstance.DamagePlayer(damage);
+    //    }
+    //}
 
-    private void OnTriggerStay2D(Collider2D collidingObject)
-    {
-        if (collidingObject.CompareTag("Player"))
-        {
-            PlayerEnergyController._playerEnergyControllerInstance.DamagePlayer(damage);
-        }
-    }
-
-
-    private void OnCollisionEnter2D(Collision2D collidingObject)
-    {
-        if (collidingObject.gameObject.CompareTag("Player"))
-        {
-            PlayerEnergyController._playerEnergyControllerInstance.DamagePlayer(damage);
-        }
-    }
+    //private void OnTriggerStay2D(Collider2D collidingObject)
+    //{
+    //    if (collidingObject.CompareTag("Player"))
+    //    {
+    //        PlayerEnergyController._playerEnergyControllerInstance.DamagePlayer(damage);
+    //    }
+    //}
 
 
-    private void OnCollisionStay2D(Collision2D collidingObject)
-    {
-        if (collidingObject.gameObject.CompareTag("Player"))
-        {
-            PlayerEnergyController._playerEnergyControllerInstance.DamagePlayer(damage);
-        }
-    }
+    //private void OnCollisionEnter2D(Collision2D collidingObject)
+    //{
+    //    if (collidingObject.gameObject.CompareTag("Player"))
+    //    {
+    //        PlayerEnergyController._playerEnergyControllerInstance.DamagePlayer(damage);
+    //    }
+    //}
+
+
+    //private void OnCollisionStay2D(Collision2D collidingObject)
+    //{
+    //    if (collidingObject.gameObject.CompareTag("Player"))
+    //    {
+    //        PlayerEnergyController._playerEnergyControllerInstance.DamagePlayer(damage);
+    //    }
+    //}
 
 
 } // end of class

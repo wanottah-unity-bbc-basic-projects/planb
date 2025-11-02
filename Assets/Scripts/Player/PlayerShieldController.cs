@@ -21,71 +21,71 @@ using UnityEngine.UI;
 
 public class PlayerShieldController : MonoBehaviour
 {
-    public static PlayerShieldController _playerShieldsControllerInstance;
+    //public static PlayerShieldController _playerShieldsControllerInstance;
 
 
 
-    // player's maximum health
-    private int playerMaximumShields;
+    //// player's maximum health
+    //private int playerMaximumShields;
 
-    // player's current health
-    [SerializeField] public float playerCurrentShields;
-
-
-
-    private void Awake()
-    {
-        _playerShieldsControllerInstance = this;
-    }
+    //// player's current health
+    //[SerializeField] public float playerCurrentShields;
 
 
-    private void Start()
-    {
-        Initialise();
-    }
+
+    //private void Awake()
+    //{
+    //    _playerShieldsControllerInstance = this;
+    //}
 
 
-    private void Initialise()
-    {
-        playerMaximumShields = 100;
-
-        playerCurrentShields = 0;
-
-        HudController._hudControllerInstance.shieldsSlider.maxValue = playerMaximumShields;
-
-        UpdateShieldsValueText();
-    }
+    //private void Start()
+    //{
+    //    Initialise();
+    //}
 
 
-    public void DamageShields(float damage)
-    {
-        playerCurrentShields -= damage;
+    //private void Initialise()
+    //{
+    //    playerMaximumShields = 100;
 
-        UpdateShieldsValueText();
-    }
+    //    playerCurrentShields = 0;
 
+    //    HudController._hudControllerInstance.shieldsSlider.maxValue = playerMaximumShields;
 
-    public void RaiseShields(int shields)
-    {
-        playerCurrentShields += shields;
-
-        if (playerCurrentShields > playerMaximumShields)
-        {
-            playerCurrentShields = playerMaximumShields;
-        }
-
-        UpdateShieldsValueText();
-    }
+    //    UpdateShieldsValueText();
+    //}
 
 
-    private void UpdateShieldsValueText()
-    {
-        float shieldsPercentage = (playerCurrentShields / playerMaximumShields) * 100;
+    //public void DamageShields(float damage)
+    //{
+    //    playerCurrentShields -= damage;
 
-        HudController._hudControllerInstance.shieldsValueText.text = ((int)shieldsPercentage).ToString() + "%";
+    //    UpdateShieldsValueText();
+    //}
 
-        HudController._hudControllerInstance.shieldsSlider.value = playerCurrentShields;
-    }
+
+    //public void RaiseShields(int shields)
+    //{
+    //    playerCurrentShields += shields;
+
+    //    if (playerCurrentShields > playerMaximumShields)
+    //    {
+    //        playerCurrentShields = playerMaximumShields;
+    //    }
+
+    //    UpdateShieldsValueText();
+    //}
+
+
+    //private void UpdateShieldsValueText()
+    //{
+    //    float shieldsPercentage = (playerCurrentShields / playerMaximumShields) * 100;
+
+    //    HudController._hudControllerInstance.shieldsValueText.text = ((int)shieldsPercentage).ToString() + "%";
+
+    //    HudController._hudControllerInstance.shieldsSlider.value = playerCurrentShields;
+    //}
 
 
 } // end of class

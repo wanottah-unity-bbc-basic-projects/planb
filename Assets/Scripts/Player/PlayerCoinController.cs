@@ -21,63 +21,63 @@ using UnityEngine.UI;
 
 public class PlayerCoinController : MonoBehaviour
 {
-    public static PlayerCoinController _playerCoinControllerInstance;
+    //public static PlayerCoinController _playerCoinControllerInstance;
 
 
 
-    // player's current health
-    [SerializeField] private int playerCurrentCoins;
+    //// player's current health
+    //[SerializeField] private int playerCurrentCoins;
 
 
 
-    private void Awake()
-    {
-        _playerCoinControllerInstance = this;
-    }
+    //private void Awake()
+    //{
+    //    _playerCoinControllerInstance = this;
+    //}
 
 
-    private void Start()
-    {
-        Initialise();
-    }
+    //private void Start()
+    //{
+    //    Initialise();
+    //}
 
 
-    private void Initialise()
-    {
-        playerCurrentCoins = 0;
+    //private void Initialise()
+    //{
+    //    playerCurrentCoins = 0;
 
-        UpdateCoinValueText();
-    }
-
-
-    public void UseCoins(int coins)
-    {
-        if (PlayerShieldController._playerShieldsControllerInstance.playerCurrentShields > 0)
-        {
-            PlayerShieldController._playerShieldsControllerInstance.DamageShields(coins);
-        }
-
-        else
-        {
-            playerCurrentCoins -= coins;
-
-            UpdateCoinValueText();
-        }
-    }
+    //    UpdateCoinValueText();
+    //}
 
 
-    public void AddCoins(int coins)
-    {
-        playerCurrentCoins += coins;
+    //public void UseCoins(int coins)
+    //{
+    //    if (PlayerShieldController._playerShieldsControllerInstance.playerCurrentShields > 0)
+    //    {
+    //        PlayerShieldController._playerShieldsControllerInstance.DamageShields(coins);
+    //    }
 
-        UpdateCoinValueText();
-    }
+    //    else
+    //    {
+    //        playerCurrentCoins -= coins;
+
+    //        UpdateCoinValueText();
+    //    }
+    //}
 
 
-    private void UpdateCoinValueText()
-    {
-        HudController._hudControllerInstance.coinsValueText.text = playerCurrentCoins.ToString();
-    }
+    //public void AddCoins(int coins)
+    //{
+    //    playerCurrentCoins += coins;
+
+    //    UpdateCoinValueText();
+    //}
+
+
+    //private void UpdateCoinValueText()
+    //{
+    //    HudController._hudControllerInstance.coinsValueText.text = playerCurrentCoins.ToString();
+    //}
 
 
 } // end of class

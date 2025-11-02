@@ -10,77 +10,77 @@ using UnityEngine;
 
 public class FuelPickup : MonoBehaviour
 {
-    // reference to destroyed particle effect
-    public GameObject destroyedParticles;
+    //// reference to destroyed particle effect
+    //public GameObject destroyedParticles;
 
 
-    // fuel value
-    public int fuel;
+    //// fuel value
+    //public int fuel;
 
-    // score value
-    public int fuelPickupPoints;
+    //// score value
+    //public int fuelPickupPoints;
 
-    public float collectDelay;
+    //public float collectDelay;
 
-    private bool CanBeCollected;
-
-
-
-    // initialise health bonus and score
-    private void Start()
-    {
-        Initialise();
-    }
+    //private bool CanBeCollected;
 
 
-    private void Update()
-    {
-        WaitToCollect();
-    }
+
+    //// initialise health bonus and score
+    //private void Start()
+    //{
+    //    Initialise();
+    //}
 
 
-    private void Initialise()
-    {
-        fuel = 250;
-
-        fuelPickupPoints = 5;
-
-        collectDelay = 15f;
-
-        CanBeCollected = false;
-    }
+    //private void Update()
+    //{
+    //    WaitToCollect();
+    //}
 
 
-    private void WaitToCollect()
-    {
-        if (collectDelay > 0)
-        {
-            collectDelay -= Time.deltaTime;
-        }
+    //private void Initialise()
+    //{
+    //    fuel = 250;
 
-        if (collectDelay <= 0)
-        {
-            CanBeCollected = true;
-        }
-    }
+    //    fuelPickupPoints = 5;
+
+    //    collectDelay = 15f;
+
+    //    CanBeCollected = false;
+    //}
 
 
-    private void OnTriggerEnter2D(Collider2D collidingObject)
-    {
-        if (CanBeCollected)
-        {
-            if (collidingObject.CompareTag("Player"))
-            {
-                PlayerFuelController._playerFuelControllerInstance.Refuel(fuel);
+    //private void WaitToCollect()
+    //{
+    //    if (collectDelay > 0)
+    //    {
+    //        collectDelay -= Time.deltaTime;
+    //    }
 
-                ScoreController._scoreControllerInstance.AddPoints(fuelPickupPoints);
+    //    if (collectDelay <= 0)
+    //    {
+    //        CanBeCollected = true;
+    //    }
+    //}
 
-                Instantiate(destroyedParticles, transform.position, transform.rotation);
 
-                Destroy(gameObject);
-            }
-        }
-    }
+    //private void OnTriggerEnter2D(Collider2D collidingObject)
+    //{
+    //    if (CanBeCollected)
+    //    {
+    //        if (collidingObject.CompareTag("Player"))
+    //        {
+    //            PlayerFuelController._playerFuelControllerInstance.Refuel(fuel);
+
+    //            ScoreController._scoreControllerInstance.AddPoints(fuelPickupPoints);
+
+    //            Instantiate(destroyedParticles, transform.position, transform.rotation);
+
+    //            Destroy(gameObject);
+    //        }
+    //    }
+    //}
 
 
 } // end of class

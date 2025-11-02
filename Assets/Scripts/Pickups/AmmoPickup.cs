@@ -9,77 +9,77 @@ using UnityEngine;
 
 public class AmmoPickup : MonoBehaviour
 {
-    // reference to destroyed particle effect
-    public GameObject destroyedParticles;
+    //// reference to destroyed particle effect
+    //public GameObject destroyedParticles;
 
 
-    // ammo value
-    public int ammo;
+    //// ammo value
+    //public int ammo;
 
-    // score value
-    public int ammoPickupPoints;
+    //// score value
+    //public int ammoPickupPoints;
 
-    public float collectDelay;
+    //public float collectDelay;
 
-    private bool CanBeCollected;
-
-
-
-    // initialise health bonus and score
-    private void Start()
-    {
-        Initialise();
-    }
+    //private bool CanBeCollected;
 
 
-    private void Update()
-    {
-        WaitToCollect();
-    }
+
+    //// initialise health bonus and score
+    //private void Start()
+    //{
+    //    Initialise();
+    //}
 
 
-    private void Initialise()
-    {
-        ammo = 50;
-
-        ammoPickupPoints = 5;
-
-        collectDelay = 15f;
-
-        CanBeCollected = false;
-    }
+    //private void Update()
+    //{
+    //    WaitToCollect();
+    //}
 
 
-    private void WaitToCollect()
-    {
-        if (collectDelay > 0)
-        {
-            collectDelay -= Time.deltaTime;
-        }
+    //private void Initialise()
+    //{
+    //    ammo = 50;
 
-        if (collectDelay <= 0)
-        {
-            CanBeCollected = true;
-        }
-    }
+    //    ammoPickupPoints = 5;
+
+    //    collectDelay = 15f;
+
+    //    CanBeCollected = false;
+    //}
 
 
-    private void OnTriggerEnter2D(Collider2D collidingObject)
-    {
-        if (CanBeCollected)
-        {
-            if (collidingObject.CompareTag("Player"))
-            {
-                PlayerWeaponController._playerWeaponControllerInstance.ReloadAmmo(ammo);
+    //private void WaitToCollect()
+    //{
+    //    if (collectDelay > 0)
+    //    {
+    //        collectDelay -= Time.deltaTime;
+    //    }
 
-                ScoreController._scoreControllerInstance.AddPoints(ammoPickupPoints);
+    //    if (collectDelay <= 0)
+    //    {
+    //        CanBeCollected = true;
+    //    }
+    //}
 
-                Instantiate(destroyedParticles, transform.position, transform.rotation);
 
-                Destroy(gameObject);
-            }
-        }
-    }
+    //private void OnTriggerEnter2D(Collider2D collidingObject)
+    //{
+    //    if (CanBeCollected)
+    //    {
+    //        if (collidingObject.CompareTag("Player"))
+    //        {
+    //            PlayerWeaponController._playerWeaponControllerInstance.ReloadAmmo(ammo);
+
+    //            ScoreController._scoreControllerInstance.AddPoints(ammoPickupPoints);
+
+    //            Instantiate(destroyedParticles, transform.position, transform.rotation);
+
+    //            Destroy(gameObject);
+    //        }
+    //    }
+    //}
 
 
 } // end of class

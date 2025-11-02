@@ -20,121 +20,121 @@ using UnityEngine.UI;
 
 public class PlayerWeaponController : MonoBehaviour
 {
-    public static PlayerWeaponController _playerWeaponControllerInstance;
+    //public static PlayerWeaponController _playerWeaponControllerInstance;
 
 
 
-    // maximum player ammo
-    private int playerMaximumAmmo;
+    //// maximum player ammo
+    //private int playerMaximumAmmo;
 
-    // current player ammo
-    public int playerCurrentAmmo;
+    //// current player ammo
+    //public int playerCurrentAmmo;
 
-    // maximum weapon temparature
-    public int maximumWeaponStatus;
+    //// maximum weapon temparature
+    //public int maximumWeaponStatus;
 
-    // current weapon temparature
-    public float currentWeaponStatus;
-
-
-
-    private void Awake()
-    {
-        _playerWeaponControllerInstance = this;
-    }
+    //// current weapon temparature
+    //public float currentWeaponStatus;
 
 
-    // initialise ammo
-    private void Start()
-    {
-        Initialise();
-    }
+
+    //private void Awake()
+    //{
+    //    _playerWeaponControllerInstance = this;
+    //}
 
 
-    private void Initialise()
-    {
-        playerMaximumAmmo = 200;
-
-        playerCurrentAmmo = playerMaximumAmmo;
-
-        maximumWeaponStatus = 100;
-
-        currentWeaponStatus = maximumWeaponStatus;
-
-        HudController._hudControllerInstance.ammoSlider.maxValue = playerMaximumAmmo;
-
-        HudController._hudControllerInstance.weaponSlider.maxValue = maximumWeaponStatus;
-
-        UpdateWeaponTemparatureValueText();
-
-        UpdateAmmoValueText();
-    }
+    //// initialise ammo
+    //private void Start()
+    //{
+    //    Initialise();
+    //}
 
 
-    // use ammo
-    public void AmmoRoundsFired()
-    {
-        playerCurrentAmmo--;
+    //private void Initialise()
+    //{
+    //    playerMaximumAmmo = 200;
 
-        UpdateAmmoValueText();
-    }
+    //    playerCurrentAmmo = playerMaximumAmmo;
 
+    //    maximumWeaponStatus = 100;
 
-    public void WeaponOverheat(float overheat)
-    {
-        currentWeaponStatus -= overheat; // / 10;
+    //    currentWeaponStatus = maximumWeaponStatus;
 
-        if (currentWeaponStatus < 0)
-        {
-            currentWeaponStatus = 0;
-        }
+    //    HudController._hudControllerInstance.ammoSlider.maxValue = playerMaximumAmmo;
 
-        UpdateWeaponTemparatureValueText();
-    }
+    //    HudController._hudControllerInstance.weaponSlider.maxValue = maximumWeaponStatus;
+
+    //    UpdateWeaponTemparatureValueText();
+
+    //    UpdateAmmoValueText();
+    //}
 
 
-    public void WeaponCooldown(float cooldown)
-    {
-        currentWeaponStatus += cooldown / 10;
+    //// use ammo
+    //public void AmmoRoundsFired()
+    //{
+    //    playerCurrentAmmo--;
 
-        if (currentWeaponStatus > maximumWeaponStatus)
-        {
-            currentWeaponStatus = maximumWeaponStatus;
-        }
-
-        UpdateWeaponTemparatureValueText();
-    }
+    //    UpdateAmmoValueText();
+    //}
 
 
-    public void ReloadAmmo(int ammo)
-    {
-        playerCurrentAmmo += ammo;
+    //public void WeaponOverheat(float overheat)
+    //{
+    //    currentWeaponStatus -= overheat; // / 10;
 
-        if (playerCurrentAmmo > playerMaximumAmmo)
-        {
-            playerCurrentAmmo = playerMaximumAmmo;
-        }
+    //    if (currentWeaponStatus < 0)
+    //    {
+    //        currentWeaponStatus = 0;
+    //    }
 
-        UpdateAmmoValueText();
-    }
-
-
-    private void UpdateWeaponTemparatureValueText()
-    {
-        float overheatPercentage = (currentWeaponStatus / maximumWeaponStatus) * 100;
-
-        HudController._hudControllerInstance.weaponTemparatureValueText.text = ((int)overheatPercentage).ToString() + "%";
-
-        HudController._hudControllerInstance.weaponSlider.value = currentWeaponStatus;
-    }
+    //    UpdateWeaponTemparatureValueText();
+    //}
 
 
-    private void UpdateAmmoValueText()
-    {
-        HudController._hudControllerInstance.ammoValueText.text = playerCurrentAmmo.ToString();
+    //public void WeaponCooldown(float cooldown)
+    //{
+    //    currentWeaponStatus += cooldown / 10;
 
-        HudController._hudControllerInstance.ammoSlider.value = playerCurrentAmmo;
-    }
+    //    if (currentWeaponStatus > maximumWeaponStatus)
+    //    {
+    //        currentWeaponStatus = maximumWeaponStatus;
+    //    }
+
+    //    UpdateWeaponTemparatureValueText();
+    //}
+
+
+    //public void ReloadAmmo(int ammo)
+    //{
+    //    playerCurrentAmmo += ammo;
+
+    //    if (playerCurrentAmmo > playerMaximumAmmo)
+    //    {
+    //        playerCurrentAmmo = playerMaximumAmmo;
+    //    }
+
+    //    UpdateAmmoValueText();
+    //}
+
+
+    //private void UpdateWeaponTemparatureValueText()
+    //{
+    //    float overheatPercentage = (currentWeaponStatus / maximumWeaponStatus) * 100;
+
+    //    HudController._hudControllerInstance.weaponTemparatureValueText.text = ((int)overheatPercentage).ToString() + "%";
+
+    //    HudController._hudControllerInstance.weaponSlider.value = currentWeaponStatus;
+    //}
+
+
+    //private void UpdateAmmoValueText()
+    //{
+    //    HudController._hudControllerInstance.ammoValueText.text = playerCurrentAmmo.ToString();
+
+    //    HudController._hudControllerInstance.ammoSlider.value = playerCurrentAmmo;
+    //}
 
 
 

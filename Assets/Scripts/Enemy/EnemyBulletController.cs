@@ -21,162 +21,162 @@ using UnityEngine.UI;
 
 public class EnemyBulletController : MonoBehaviour
 {
-    // Maximum player ammo
-    //private int maximumMissiles;
+    //// Maximum player ammo
+    ////private int maximumMissiles;
 
-    // Number of pickup missiles
-    //private int pickupMissiles;
+    //// Number of pickup missiles
+    ////private int pickupMissiles;
 
-    // Ammo counter
-    //public static int missileCount;
+    //// Ammo counter
+    ////public static int missileCount;
 
-    // enemy bullet speed
-    private float enemyBulletSpeed;
+    //// enemy bullet speed
+    //private float enemyBulletSpeed;
 
-    private Vector3 enemyBulletDirection;
+    //private Vector3 enemyBulletDirection;
 
-    //public int playerDamage;
-
-
-    // Reference to player's missile rigidbody components
-    //private Rigidbody2D portMissileRigidbody;
-
-    //private Rigidbody2D starboardMissileRigidbody;
+    ////public int playerDamage;
 
 
-    // Reference to enemy death particle effect
+    //// Reference to player's missile rigidbody components
+    ////private Rigidbody2D portMissileRigidbody;
+
+    ////private Rigidbody2D starboardMissileRigidbody;
+
+
+    //// Reference to enemy death particle effect
+    ////[SerializeField]
+    ////private GameObject enemyDeadParticles;
+
+    //// Reference to missile collision particle effect
+    ////[SerializeField]
+    ////private GameObject missileCollisionParticles;
+
+
+    //// Reference to enemy health manager script
+    ////public EnemyHealthManager enemyHealthBar;
+
+
+    //// Enemy points
+    ////public int enemyPoints01;
+
+    //// Missile hit points
+    ////public int playerMissileHitPoints;
+
+
+
+    //// Reference to health text
+    ////[SerializeField]
+    ////private Text missileCounter;
+
+    ///*
+    //// Reference to ammo controller
     //[SerializeField]
-    //private GameObject enemyDeadParticles;
-
-    // Reference to missile collision particle effect
-    //[SerializeField]
-    //private GameObject missileCollisionParticles;
-
-
-    // Reference to enemy health manager script
-    //public EnemyHealthManager enemyHealthBar;
-
-
-    // Enemy points
-    //public int enemyPoints01;
-
-    // Missile hit points
-    //public int playerMissileHitPoints;
+    //private AmmoController ammoController;*/
 
 
 
-    // Reference to health text
-    //[SerializeField]
-    //private Text missileCounter;
+    //private void Awake()
+    //{
+    //    //portMissileRigidbody = GetComponent<Rigidbody2D>();
 
-    /*
-    // Reference to ammo controller
-    [SerializeField]
-    private AmmoController ammoController;*/
+    //    //starboardMissileRigidbody = GetComponent<Rigidbody2D>();
+    //}
 
 
-
-    private void Awake()
-    {
-        //portMissileRigidbody = GetComponent<Rigidbody2D>();
-
-        //starboardMissileRigidbody = GetComponent<Rigidbody2D>();
-    }
-
-
-    // Initialise ammo
-    private void Start()
-    {
-        Initialise();
+    //// Initialise ammo
+    //private void Start()
+    //{
+    //    Initialise();
 
 
 
-        //enemyHealthManager = FindObjectOfType<EnemyHealthManager>();
-        //enemyHealthBar = GetComponent<EnemyHealthManager>();
+    //    //enemyHealthManager = FindObjectOfType<EnemyHealthManager>();
+    //    //enemyHealthBar = GetComponent<EnemyHealthManager>();
 
 
 
 
 
 
-        //maximumMissiles = 200;
+    //    //maximumMissiles = 200;
 
-        //pickupMissiles = 50;
+    //    //pickupMissiles = 50;
 
-        //missileCount = maximumMissiles;
-        //}
-
-
-        // Update ammo display
-        //private void Update()
-        //{
+    //    //missileCount = maximumMissiles;
+    //    //}
 
 
-        /*if (EnemyAttackController.enemyFacingLeft)
-        {
-            //portMissileRigidbody.velocity = new Vector2(-enemyBulletSpeed, portMissileRigidbody.velocity.y);
-        }
-
-        else
-        {
-            //starboardMissileRigidbody.velocity = new Vector2(enemyBulletSpeed, starboardMissileRigidbody.velocity.y);
-        }*/
-
-        // Update ammo count
-        //missileCounter.text = "" + missileCount;
-    }
+    //    // Update ammo display
+    //    //private void Update()
+    //    //{
 
 
-    private void Update()
-    {
-        MoveEnemyBullet();
-    }
+    //    /*if (EnemyAttackController.enemyFacingLeft)
+    //    {
+    //        //portMissileRigidbody.velocity = new Vector2(-enemyBulletSpeed, portMissileRigidbody.velocity.y);
+    //    }
+
+    //    else
+    //    {
+    //        //starboardMissileRigidbody.velocity = new Vector2(enemyBulletSpeed, starboardMissileRigidbody.velocity.y);
+    //    }*/
+
+    //    // Update ammo count
+    //    //missileCounter.text = "" + missileCount;
+    //}
 
 
-    private void MoveEnemyBullet()
-    {
-        transform.position += enemyBulletDirection * enemyBulletSpeed * Time.deltaTime;
-    }
+    //private void Update()
+    //{
+    //    MoveEnemyBullet();
+    //}
 
 
-    private void Initialise()
-    {
-        enemyBulletSpeed = 20f;
-
-        //playerDamage = 50;
-
-        // get player's direction
-        enemyBulletDirection = PlayerController._playerControllerInstance.transform.position - transform.position;
-
-        enemyBulletDirection.Normalize();
-    }
+    //private void MoveEnemyBullet()
+    //{
+    //    transform.position += enemyBulletDirection * enemyBulletSpeed * Time.deltaTime;
+    //}
 
 
+    //private void Initialise()
+    //{
+    //    enemyBulletSpeed = 20f;
 
-    // destroy enemy bullet when it collides with another object
-    private void OnTriggerEnter2D(Collider2D collidingObject)
-    {
-        // check if enemy bullet has hit player
-        if (collidingObject.CompareTag("Player"))
-        {
-            PlayerEnergyController._playerEnergyControllerInstance.DamagePlayer(EnemyController.playerDamage);
+    //    //playerDamage = 50;
 
-            // Kill the enemy
-            //Instantiate(enemyDeadParticles, collidingObject.transform.position, collidingObject.transform.rotation);
+    //    // get player's direction
+    //    //enemyBulletDirection = PlayerController._playerControllerInstance.transform.position - transform.position;
 
-            //Destroy(collidingObject.gameObject);
-            Destroy(gameObject);
-        }
+    //    enemyBulletDirection.Normalize();
+    //}
 
-        // check if enemy bullet has hit ground
-        /*if (collidingObject.CompareTag("Ground"))
-        {
-            Debug.Log("hit ground");
 
-            Destroy(gameObject);
-        }*/
 
-    }
+    //// destroy enemy bullet when it collides with another object
+    //private void OnTriggerEnter2D(Collider2D collidingObject)
+    //{
+    //    // check if enemy bullet has hit player
+    //    if (collidingObject.CompareTag("Player"))
+    //    {
+    //        PlayerEnergyController._playerEnergyControllerInstance.DamagePlayer(EnemyController.playerDamage);
+
+    //        // Kill the enemy
+    //        //Instantiate(enemyDeadParticles, collidingObject.transform.position, collidingObject.transform.rotation);
+
+    //        //Destroy(collidingObject.gameObject);
+    //        Destroy(gameObject);
+    //    }
+
+    //    // check if enemy bullet has hit ground
+    //    /*if (collidingObject.CompareTag("Ground"))
+    //    {
+    //        Debug.Log("hit ground");
+
+    //        Destroy(gameObject);
+    //    }*/
+
+    //}
 
 
 } // end of class

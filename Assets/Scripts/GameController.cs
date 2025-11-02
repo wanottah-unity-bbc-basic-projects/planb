@@ -1,508 +1,542 @@
 ﻿
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-
-
-/// <summary>
-/// Plan B 2020 Mk i
-/// GameController.cs
-/// Port of Atari's 1972 video game
-/// by Atari
-/// Adapted from 'Learn to Create A Roguelike Game in Unity'
-/// by James Doyle
-/// Created: 13/01/2020
-/// </summary>
 
 //
-// v2025.10.15
+// Plan B [Andrew Foord, 1987] v2023.09.14
+//
+// v2025.11.01
 //
 
 public class GameController : MonoBehaviour
 {
+    // make game controller script accessible from other scripts
+    public static GameController gameController;
 
 
-    // reference to text components
-    //public Text player1ScoreText;
-    //public Text player2ScoreText;
-    //public Text player3ScoreText;
-    //public Text player4ScoreText;
+    // reference to title screen
+    public GameObject titleScreen;
+
+    // reference to high score screen
+    public GameObject highScoreScreen;
+
+    // reference to the pawz screen
+    public GameObject pawzScreen;
+
+    // reference to the game over screen
+    public GameObject gameOverScreen;
+
+    // reference to the game over screen
+    public GameObject missionFailedScreen;
+
+    // reference to the victory screen
+    public GameObject victoryScreen;
+
+    // reference to quit game background
+    public GameObject quitGameScreen;
+
+    // reference to player
+    public GameObject playerOne;
+
+    // reference to first room collider
+    public Collider2D roomActivator;
 
 
-    public Text gameOverText;
+    // get a reference to the audio source component
+    [HideInInspector] public AudioSource audioPlayer;
 
 
-    // player scores
-    [HideInInspector] public int player1Score;
-    [HideInInspector] public int player2Score;
-    //[HideInInspector] public int player3Score;
-    //[HideInInspector] public int player4Score;
+    private const int KEY_1 = 13;
+    private const int KEY_2 = 3;
+    private const int KEY_3 = 2;
+    private const int KEY_4 = 10;
 
-    // game credits
-    [HideInInspector] public int gameCredits;
+    private const int ENERGY = 100;
+    private const int AMMO = 100;
+    private const int COMPUTERS = 100;
 
+    private const int SINGLE_TILE_POINTS = 1;
 
-    // player boundaries
-    [HideInInspector] public float upperScreenBoundary;
-    [HideInInspector] public float lowerScreenBoundary;
-    [HideInInspector] public float leftScreenBoundary;
-    [HideInInspector] public float rightScreenBoundary;
-    private float upperBoundary;
-    private float lowerBoundary;
-    private float leftBoundary;
-    private float rightBoundary;
+    private const int SPANNER_POINTS = 5;
+    private const int AMMO_POINTS = 5;
+    private const int OIL_POINTS = 5;
+    private const int KEY_POINTS = 5;
 
+    private const int COMPUTER_G_POINTS = 50;
 
-    // game mode
-    [HideInInspector] public bool canPlay;
-    [HideInInspector] public bool inPlayMode;
-    [HideInInspector] public bool inDemoMode;
-    [HideInInspector] public bool inPawzMode;
+    private const int ROBOT_7_POINTS = 10;
+    private const int ROBOT_1_POINTS = 20;
+    private const int ROBOT_9_POINTS = 30;
+    private const int ROBOT_8_POINTS = 40;
 
 
-    // direction of player
-    public const int STOPPED = 0;
-    public const int UP = 1;
-    public const int DOWN = -1;
-    public const int LEFT = -1;
-    public const int RIGHT = 1;
+    // rooms
+    public Transform[] roomArray;
 
 
-    public const int PLAYER_ONE = 1;
-    public const int PLAYER_TWO = 2;
-    public const int PLAYER_THREE = 3;
-    public const int PLAYER_FOUR = 4;
+    // reference to 'Score integers' assigned to each enemy
+    public int score;
+
+    public int highScore;
+
+    public int key1;
+    public int key2;
+    public int key3;
+    public int key4;
+
+    public int energy;
+
+    public int ammo;
+
+    public int computers;
+
+    // current room the player is in
+    public int room;
 
 
-    // colours
-    public const int WHITE = 255;
-    public const int RED = 255;
-    public const int GREEN = 255;
-    public const int BLUE = 255;
+    // are we playing the game
+    public bool gamePawzed;
+
+    // is the game over
+    public bool gameOver;
+
+    // level completed
+    public bool levelComplete;
+
+    // if we are starting the level
+    public bool levelStart;
+
+    // if we are entering a room
+    public bool hasEnterdRoom;
+
+    public bool canPlay;
+
+    // is the game in play
+    public bool inPlayMode;
+
+    public bool inAttractMode;
+
+    public bool inPawzMode;
 
 
-    // game arena y offset
-    public const float POSITIVE_Y_OFFSET = 0.33f;
-    public const float NEGATIVE_Y_OFFSET = -0.33f;
+    public float coolDownTimer = 3f;
 
-    public const int START_SCORE = 0;
-    private const int WINNING_SCORE = 11;
-    private const int GAMEOVER_SCORE = 0;
+    public float enteredRoomTimer;
 
 
 
-    void Start()
+    private void Awake()
     {
-        Initialise();
+        gameController = this;
     }
 
 
-    private void Initialise()
+    private void Start()
     {
-        InitialiseGameModes();
-
-        InitialiseScreenBoundaries();
-
-        StartDemoMode();
+        CabinetStartUp();
     }
 
 
-    private void InitialiseGameModes()
+    private void Update()
     {
-        canPlay = false;
+        GameLoop();
+    }
 
-        inPawzMode = false;
-        inDemoMode = false;
+
+    private void CabinetStartUp()
+    {
+        InitialiseCabinet();
+
+        StartAttractMode();
+    }
+
+
+    private void InitialiseCabinet()
+    //private void InitialiseLevelStart()
+    {
+        canPlay = false; // ?????
+
+        // set game play flags
+        gameOver = true;
+    }
+
+
+    public void StartAttractMode()
+    {
+        // start attract mode
+        inAttractMode = true;
+
         inPlayMode = false;
+
+        // activate the blanking planel
+        CameraController.cameraController.blankingPanel.gameObject.SetActive(true);
+
+        // cycle the title screen and high scores
+        StartCoroutine(CycleText());
     }
 
 
-    private void InitialiseScreenBoundaries()
+    private void GameLoop()
     {
-        upperBoundary = 4.3f;
+        GetKeyboardInput();
 
-        lowerBoundary = -4.3f;
-
-        //leftBoundary = -6.43f;
-
-        //rightBoundary = 6.43f;
+        GetPlayerInput();
     }
 
 
-    // =============================================================================
-    // check for player input
-    // =============================================================================
-    void Update()
+    private void GetKeyboardInput()
     {
-        ControllerInput();
-    }
-
-
-    private void ControllerInput()
-    {
-        if (!inPawzMode)
+        if (!inAttractMode)
         {
-            //player1SpriteController.CheckPlayerInput();
+            return;
+        }
 
-            //player2SpriteController.CheckPlayerInput();
+        // start game
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            inAttractMode = false;
 
-            //player3SpriteController.CheckPlayerInput();
+            //StopCoroutine(CycleText());
 
-            //player4SpriteController.CheckPlayerInput();
+            //StartCoroutine(StartDelay());
+
+            titleScreen.SetActive(false);
+
+            highScoreScreen.SetActive(false);
+
+            StartOnePlayerGame();
+        }
+
+
+
+        // if the game is in play
+        if (inPlayMode)
+        {
+            // and the game is not already pawzed
+            if (!gamePawzed)
+            {
+                // and the player has pressed the escape key
+                if (Input.GetKeyDown(KeyCode.P))
+                {
+                    PawzGame();
+                }
+            }
         }
     }
 
 
-    // =============================================================================
-    // set upper and lower limits for player sprite movement
-    // =============================================================================
-    private void SetGameArenaBoundaries()
+    private void GetPlayerInput()
     {
-        // player boundaries
-        upperScreenBoundary = upperBoundary + GameController.POSITIVE_Y_OFFSET;
-
-        lowerScreenBoundary = lowerBoundary + GameController.POSITIVE_Y_OFFSET;
-
-        //leftBoundary = -6.43f;
-
-        //rightBoundary = 6.43f;
+        if (!gameOver && !inPawzMode && !inAttractMode)
+        {
+            PlayerController.playerController.GetPlayerInput();
+        }
     }
 
 
-    public void SetPawzMode()
+    IEnumerator CycleText()
     {
-        //SetGamePadControllers();
+        if (!inAttractMode)
+        {
+            yield break;
+        }
 
-        //ballSpriteController.FreezeBall();
+        titleScreen.gameObject.SetActive(true);
+
+        yield return new WaitForSeconds(6f);
+
+        if (!inAttractMode)
+        {
+            yield break;
+        }
+
+        titleScreen.gameObject.SetActive(false);
+
+        highScoreScreen.gameObject.SetActive(true);
+
+        yield return new WaitForSeconds(6f);
+
+        if (!inAttractMode)
+        {
+            yield break;
+        }
+
+        highScoreScreen.gameObject.SetActive(false);
+
+        StartCoroutine(CycleText());
     }
 
 
-    public void SetPlayMode()
-    {
-        //SetGamePadControllers();
-
-        //ballSpriteController.ResumeBall();
-    }
-
-
-    // Start demo mode
-    public void StartDemoMode()
-    {
-        gameOverText.gameObject.SetActive(true);
-
-        // start demo mode
-        inDemoMode = true;
-        inPlayMode = false;
-
-        SetGameArenaBoundaries();
-
-        //player1SpriteController.player1IsComputer = true;
-
-        //player2SpriteController.player2IsComputer = true;
-
-        //player2SpriteController.isPlayer2 = false;
-
-
-        //player3SpriteController.player3IsComputer = true;
-
-        //player3SpriteController.isPlayer3 = false;
-
-
-        //player4SpriteController.player4IsComputer = true;
-
-        //player4SpriteController.isPlayer4 = false;
-
-
-        // initialise paddles
-        //player1SpriteController.InitialiseSprite();
-
-        //player2SpriteController.InitialiseSprite();
-
-        //player3SpriteController.InitialisePaddle();
-
-        //player4SpriteController.InitialisePaddle();
-
-
-        // disable dpads
-        //player1Dpad.gameObject.SetActive(false);
-
-        //player2Dpad.gameObject.SetActive(false);
-
-        //player3Dpad.gameObject.SetActive(false);
-
-        //player4Dpad.gameObject.SetActive(false);
-
-
-        // Enable ball
-        //ballSpriteController.gameObject.SetActive(true);
-
-        // Call ball controller script
-        //ballSpriteController.InitialiseBall();
-    }
-
-
-    // Start one player game
     public void StartOnePlayerGame()
     {
-        //player1SpriteController.player1IsComputer = false;
-
-
-        //player2SpriteController.player2IsComputer = true;
-
-        //player2SpriteController.isPlayer2 = false;
-
-
-        //player3SpriteController.player3IsComputer = true;
-
-        //player3SpriteController.isPlayer3 = false;
-
-
-        //player4SpriteController.player4IsComputer = true;
-
-        //player4SpriteController.isPlayer4 = false;
-
-
-        InitialiseGameMode();
+        InitialiseGame();
     }
 
 
-    // Start two player game
-    public void StartTwoPlayerGame()
+    private void InitialiseGame()
     {
-        //player1SpriteController.player1IsComputer = false;
+        // player score
+        score = 0;
+
+        // player lives
+        //lives = 3;
+
+        // player health
+        //playerHealth = 100;
 
 
-        //player2SpriteController.player2IsComputer = false;
+        // game time left
+        // 3 minutes or 180 seconds
+        //gameTime = 180f;
 
-        //player2SpriteController.isPlayer2 = true;
+        //SetTimeFormat();
 
-
-        //player3SpriteController.player3IsComputer = true;
-
-        //player3SpriteController.isPlayer3 = false;
-
-
-        //player4SpriteController.player4IsComputer = true;
-
-        //player4SpriteController.isPlayer4 = false;
-
-
-        InitialiseGameMode();
-    }
-
-
-    // Start two player game
-    public void StartThreePlayerGame()
-    {
-        //player1SpriteController.player1IsComputer = false;
-
-
-        //player2SpriteController.player2IsComputer = false;
-
-        //player2SpriteController.isPlayer2 = true;
-
-
-        //player3SpriteController.player3IsComputer = false;
-
-        //player3SpriteController.isPlayer3 = true;
-
-
-        //player4SpriteController.player4IsComputer = true;
-
-        //player4SpriteController.isPlayer4 = false;
-
-
-        InitialiseGameMode();
-    }
-
-
-    // Start two player game
-    public void StartFourPlayerGame()
-    {
-        //player1SpriteController.player1IsComputer = false;
-
-
-        //player2SpriteController.player2IsComputer = false;
-
-        //player2SpriteController.isPlayer2 = true;
-
-
-        //player3SpriteController.player3IsComputer = false;
-
-        //player3SpriteController.isPlayer3 = true;
-
-
-        //player4SpriteController.player4IsComputer = false;
-
-        //player4SpriteController.isPlayer4 = true;
-
-
-        InitialiseGameMode();
-    }
-
-
-    // Initialise
-    private void InitialiseGameMode()
-    {
-
-        gameOverText.gameObject.SetActive(false);
-
+        // set the game in play flags and enter room timer
         inPlayMode = true;
-        inDemoMode = false;
 
-        InitialiseScore();
+        gameOver = false;
 
-        // initialise paddles
-        //player1SpriteController.InitialiseSprite();
+        //inAttractMode = false;
 
-        //player2SpriteController.InitialiseSprite();
+        //levelStart = false;
 
-        //player3SpriteController.InitialisePaddle();
+        //levelComplete = false;
 
-        //player4SpriteController.InitialisePaddle();
+        //enteredRoomTimer = coolDownTimer;
 
+        //hasEnterdRoom = true;
 
-        // initialise game controllers
-        //SetGamePadControllers();
+        // deactivate the starting room collider
+        roomActivator.enabled = false;
 
+        // deactivate the blanking panel
+        CameraController.cameraController.blankingPanel.gameObject.SetActive(false);
 
-        // Reset and enable ball
-        //ballSpriteController.ResetBall(ballSpriteController.ballSpeed, ballSpriteController.ballSpeed);
+        playerOne.SetActive(true);
+
+        PlayerController.playerController.InitialisePlayer();
     }
 
 
-    private void SetGamePadControllers()
+
+
+
+
+
+
+
+
+
+
+
+    private void PlayerEnteredRoom()
     {
-        if (inPawzMode)
-        {
-            //player1Dpad.gameObject.SetActive(false);
+        // countdown timer
+        //enteredRoomTimer -= Time.deltaTime;
 
-            //player2Dpad.gameObject.SetActive(false);
+        // if the time left is less than or equal to zero 
+        //if (enteredRoomTimer <= 0)
+        //{
+            // set timer to zero
+            //enteredRoomTimer = 0;
 
-            //player3Dpad.gameObject.SetActive(false);
+            // indicate we are no longer waiting for the player
+            hasEnterdRoom = false;
 
-            //player4Dpad.gameObject.SetActive(false);
-        }
-
-        else
-        {
-            //player1Dpad.gameObject.SetActive(true);
-
-            //if (player2SpriteController.player2IsComputer)
-            //{
-            //player2Dpad.gameObject.SetActive(false);
-            //}
-
-            //else
-            //{
-            //player2Dpad.gameObject.SetActive(true);
-            //}
-        }
+            // spawn the enemy
+            //CameraController.cameraController.SpawnEnemy();
+        //}
     }
 
 
-    private void InitialiseScore()
+    public void OpenDoor(int doorToOpen)
     {
-        player1Score = START_SCORE;
-
-        player2Score = START_SCORE;
-
-        //player3Score = 0;
-
-        //player4Score = 0;
-
-        UpdateScoreText();
+        // open door to next room
+        //doors[doorToOpen].SetActive(false);
     }
 
 
-    // When a goal is scored . . .
-    public void GoalScored(int playerScored)
+    private void PawzGame()
     {
-        if (!inDemoMode)
-        {
-            // update score
-            UpdateScore(playerScored);
+        // pawz the game
+        gamePawzed = true;
 
-            IsGameOver(playerScored);
-        }
+        // activate the background
+        //backgroundPanel.SetActive(true);
+
+        // load the pawz screen
+        pawzScreen.SetActive(true);
+
+        // and freeze game play
+        Time.timeScale = 0f;
     }
 
 
-    // update score
-    private void UpdateScore(int playerScored)
+    public void ResumeGame()
     {
-        if (!inDemoMode)
-        {
-            switch (playerScored)
-            {
-                case PLAYER_ONE:
+        // un-pawz the game
+        gamePawzed = false;
 
-                    UpdatePlayer1Score();
+        // deactivate the background
+        //backgroundPanel.SetActive(false);
 
-                    break;
+        // close the pawz screen
+        pawzScreen.SetActive(false);
 
-                case PLAYER_TWO:
-
-                    UpdatePlayer2Score();
-
-                    break;
-            }
-
-            IsGameOver(playerScored);
-        }
+        // and un-freeze game play
+        Time.timeScale = 1f;
     }
 
 
-    public void UpdatePlayer1Score()
+    public void RestartGame()
     {
-        player1Score = player1Score + 1;
+        // close the game over screen
+        gameOverScreen.SetActive(false);
 
-        UpdateScoreText();
+        // and un-freeze game play
+        Time.timeScale = 1f;
+
+        // restart the game
+        //SceneManager.LoadScene(0);
     }
 
 
-    public void UpdatePlayer2Score()
+    public void TitleScreen()
     {
-        player2Score = player2Score + 1;
+        // close the victory screen
+        //victoryScreen.SetActive(false);
 
-        UpdateScoreText();
+        // load the title screen
+        titleScreen.SetActive(true);
+
+        // play title music
+        //AudioController.audioControllerScript.PlayTitleMusic();
     }
 
 
-    // Check if game over
-    public void IsGameOver(int playerScored)
+    // if the play button is pressed
+    public void PlayButton()
     {
-        // Check to see which player has won
-        if (player1Score == WINNING_SCORE)
-        {
-            GameOver(PLAYER_ONE);
-        }
+        // hide the background panel
+        //backgroundPanel.SetActive(false);
 
-        else if (player2Score == WINNING_SCORE)
-        {
-            GameOver(PLAYER_TWO);
-        }
+        // close the main menu
+        titleScreen.SetActive(false);
+
+        // close the game over screen
+        //gameOverScreen.SetActive(false);
+
+        // display the player ui panel
+        //playerUiPanel.SetActive(true);
+
+        // play title music
+        //AudioController.audioControllerScript.PlayLevelMusic();
+
+        //Initialise();
     }
 
 
-    // When the game is over
-    private void GameOver(int winner)
+
+    public void MissionFailed()
     {
-        StartDemoMode();
+        // game over
+        gameOver = true;
+
+        levelComplete = true;
+
+        inPlayMode = false;
+
+        // activate the background
+        //backgroundPanel.SetActive(true);
+
+        // load the victory screen
+        victoryScreen.SetActive(true);
+
+        // and freeze game play
+        Time.timeScale = 0f;
     }
 
 
-    // Update the player's scores
-    private void UpdateScoreText()
+    public void Victory()
     {
-        //player1ScoreText.text = player1Score.ToString();
+        // game over
+        gameOver = true;
 
-        //player2ScoreText.text = player2Score.ToString();
+        levelComplete = true;
 
-        //player3ScoreText.text = player3Score.ToString();
+        inPlayMode = false;
 
-        //player4ScoreText.text = player4Score.ToString();
+        // activate the background
+        //backgroundPanel.SetActive(true);
+
+        // load the victory screen
+        victoryScreen.SetActive(true);
+
+        // and freeze game play
+        Time.timeScale = 0f;
+    }
+
+
+    public void GameOver()
+    {
+        // game over
+        gameOver = true;
+
+        inPlayMode = false;
+
+        // activate the background
+        //backgroundPanel.SetActive(true);
+
+        // open the game over screen
+        gameOverScreen.SetActive(true);
+
+        // and freeze game play
+        Time.timeScale = 0f;
+    }
+
+
+    public void DisplayPlayerScore()
+    {
+        //scoreText.text = score.ToString("000000");
+    }
+
+
+    public void DisplayGameTime()
+    {
+        // countdown the time
+        //gameTime -= Time.deltaTime;
+
+        SetTimeFormat();
+
+        // if the player is out of time
+        //if (gameTime < 0)
+        //{
+            //gameTime = 0f;
+
+            //GameOver();
+        //}
+    }
+
+
+    private void SetTimeFormat()
+    {
+        // convert time to minutes and seconds
+        //int minutes = ((int)gameTime / 60);
+
+        //int seconds = ((int)gameTime % 60);
+
+        // format and display the remaining time
+        //gameTimeText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+    }
+
+
+    // if the quit button is pressed
+    public void QuitGame()
+    {
+        // quit the game
+        quitGameScreen.SetActive(true);
+
+        Application.Quit();
     }
 
 

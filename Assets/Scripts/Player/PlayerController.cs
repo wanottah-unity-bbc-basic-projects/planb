@@ -4,31 +4,40 @@ using System.Collections.Generic;
 using UnityEngine;
 
 //
-// Plan B [Bug Byte, 1987] v2023.09.14
+// Plan B [Andrew Foord, 1987] v2023.09.14
 //
-// v2025.10.15
+// v2025.11.01
 //
 
 public class PlayerController : MonoBehaviour
 {
-    public static PlayerController _playerControllerInstance;
+    public static PlayerController playerController;
 
 
     // reference to the player's 'Animator' component
-    public Animator playerAnimator;
+    //public Animator playerAnimator;
 
     // reference to the player's 'Rigidbody' component
     private Rigidbody2D playerRigidbody;
+
 
     // reference to player bullet
     public GameObject playerBullet;
 
     // reference to player's weapon launcher
+    public Transform weaponHolder;
     public Transform weaponLauncher;
+
+    public Transform scanner;
 
 
     // how fast the player can move
+    private float playerHorizontalSpeed;
+    private float playerVerticalSpeed;
     private float playerSpeed;
+
+    private Vector2 playerStartPosition;
+
 
     // direction the player is moving horizontally
     private float horizontalDirection;
@@ -40,270 +49,439 @@ public class PlayerController : MonoBehaviour
     private float fireRate;
     private float shootDelay;
 
-    // knockback force
-    public float knockbackForce;
+    //// knockback force
+    //public float knockbackForce;
 
-    // length of time player will be knocked back for
-    public float knockbackDuration;
+    //// length of time player will be knocked back for
+    //public float knockbackDuration;
 
-    // number of times player is knocked back
-    public float knockbackCounter;
+    //// number of times player is knocked back
+    //public float knockbackCounter;
 
-    // direction from which player is knocked back
-    public bool leftKnockback;
-
-
-    // weapon launcher positions
-    private const float LAUNCHER_OFFSET = 2;
-    private const float PORT_ROTATION = 180f;
-    private const float STARBOARD_ROTATION = 0f;
+    //// direction from which player is knocked back
+    //public bool leftKnockback;
 
 
-    // if player is moving
-    private bool playerMoving;
+    //// weapon launcher positions
+    //private const float LAUNCHER_OFFSET = 2;
+    //private const float PORT_ROTATION = 180f;
+    //private const float STARBOARD_ROTATION = 0f;
+
+
+    // player direction
+    private const float FACING_LEFT = 1f;
+    private const float FACING_RIGHT = -1f;
+
+    private const float PLAYER_MOVE_SPEED = 2.5f;
+    private const float PLAYER_FIRE_RATE = 0.4f;
+
+    // player start position
+    private const float PLAYER_START_POSITION_X = 255.5f;
+    private const float PLAYER_START_POSITION_Y = -53.5f;
+
+
+
+    private bool playerIsMoving;
+    public bool playerIsFacingRight;
+    private bool playerIsFiring;
+    public bool playerIsDead;
+
+    public bool playerHasLeftRoom;
+    public int exit;
+
+    public bool inPlay;
+
 
 
 
     private void Awake()
     {
-        _playerControllerInstance = this;
-    }
+        playerController = this;
 
-
-    void Start()
-    {
-        Initialise();
-    }
-
-
-    void Update()
-    {
-        GetKeyboardInput();
-    }
-
-
-    private void Initialise()
-    {
         // get reference to player's rigidbody component
         playerRigidbody = GetComponent<Rigidbody2D>();
+    }
+
+
+    //void Start()
+    //{
+    //    Initialise();
+    //}
+
+
+    //void Update()
+    //{
+    //    GetKeyboardInput();
+
+    //    MovePlayer();
+    //}
+
+
+    public void InitialisePlayer()
+    {
+        PositionPlayer();
 
         // set player's horizontal and vertical speed
-        playerSpeed = 12f;
+        playerHorizontalSpeed = 12f;
+        playerVerticalSpeed = 8f;
 
-        fireRate = 0.1f;
+        //    fireRate = 0.1f;
 
-        // set player to idle
-        playerMoving = false;
+        //    // set player to idle
+        //    playerMoving = false;
 
-        // set launcher direction
-        PositionLauncher(-LAUNCHER_OFFSET, PORT_ROTATION);
+        //    // set launcher direction
+        //    PositionLauncher(-LAUNCHER_OFFSET, PORT_ROTATION);
+
+        playerSpeed = PLAYER_MOVE_SPEED;
+
+        //playerFireDirection = ANIMATION_PLAYER_IDLE;
+
+        fireRate = PLAYER_FIRE_RATE;
+
+        // reset player 1 start position
+        //GameController.gameController.playerRespawning = true;
+
+
+        playerIsFacingRight = true;
+        playerIsMoving = false;
+        playerIsFiring = false;
+        playerIsDead = false;
+        playerHasLeftRoom = false;
+
+        exit = -1;
+
+        //inPlay = false;
     }
-
-
-    private void PositionLauncher(float launcherOffset, float launcherRotation)
-    {
-        // set launcher direction
-        weaponLauncher.position = new Vector3(transform.position.x + launcherOffset, weaponLauncher.position.y, 0f);
-
-        weaponLauncher.eulerAngles = new Vector3(0f, 0f, launcherRotation);
-    }
-
 
 
     // move player with keyboard
-    private void GetKeyboardInput()
+    public void GetPlayerInput()
     {
-        // set player's move direction
+        if (playerIsDead)
+        {
+            return;
+        }
+
+        PlayerControllerInput();
+
+        MovePlayer();
+    }
+
+    private void PlayerControllerInput()
+    { 
+        // set player's horizontal move speed
         horizontalDirection = 0f;
 
 
-        if (!playerMoving)
-        {
-            // set player idle animation
-            playerAnimator.SetBool("Moving Left", false);
-
-            playerAnimator.SetBool("Moving Right", false);
-        }
-
-
-        if (Input.GetKey(KeyCode.Z) || Input.GetKey(KeyCode.X))
-        {
-            if (PlayerFuelController._playerFuelControllerInstance.playerCurrentFuel > 0)
-            {
-                playerMoving = true;
-            }
-        }
-
-        else
-        {
-            playerMoving = false;
-        }
-
-
-        // see if player is moving left
+        // move player left
         if (Input.GetKey(KeyCode.Z))
         {
-            // does player have fuel
-            if (PlayerFuelController._playerFuelControllerInstance.playerCurrentFuel > 0)
-            {
-                // set player's direction to player's speed
-                horizontalDirection = -playerSpeed;
+            horizontalDirection = -playerHorizontalSpeed;
 
-                // set launcher direction
-                PositionLauncher(-LAUNCHER_OFFSET, PORT_ROTATION);
+            // face player left
+            transform.localScale = new Vector3(FACING_LEFT, 1f, 1f);
 
-                // set animation depending on which way the player is moving
-                playerAnimator.SetBool("Moving Left", true);
-                playerAnimator.SetBool("Moving Right", false);
-
-                // consume fuel while moving
-                PlayerFuelController._playerFuelControllerInstance.FuelConsumption(1);
-            }
+            scanner.transform.localScale = new Vector3(FACING_LEFT, 1f, 1f);
         }
 
 
-        // see if player is moving right
+        // move player right
         if (Input.GetKey(KeyCode.X))
         {
-            // does player have fuel
-            if (PlayerFuelController._playerFuelControllerInstance.playerCurrentFuel > 0)
-            {
-                // set player's direction to player's speed
-                horizontalDirection = playerSpeed;
+            horizontalDirection = playerHorizontalSpeed;
 
-                // set launcher direction
-                PositionLauncher(LAUNCHER_OFFSET, STARBOARD_ROTATION);
+            // face player right
+            transform.localScale = new Vector3(FACING_RIGHT, 1f, 1f);
 
-                // set animation depending on which way the player is moving
-                playerAnimator.SetBool("Moving Left", false);
-                playerAnimator.SetBool("Moving Right", true);
-
-                // consume fuel while moving
-                PlayerFuelController._playerFuelControllerInstance.FuelConsumption(1);
-            }
+            scanner.transform.localScale = new Vector3(FACING_RIGHT, 1f, 1f);
         }
 
 
-        // if player is not being knocked back
-        if (knockbackCounter <= 0)
+        // move player up
+        if (Input.GetKey(KeyCode.RightShift))
         {
-            // move player
-            MovePlayerHorizontally();
+            verticalDirection = playerVerticalSpeed;
         }
 
         // otherwise
+        // move player down
         else
         {
-            // see from which direction player is being knocked back
-            if (leftKnockback)
-            {
-                // knock player to the right
-                horizontalDirection = knockbackForce;
-
-                MovePlayerHorizontally();
-            }
-
-
-            if (!leftKnockback)
-            {
-                // knock player to the left
-                horizontalDirection = -knockbackForce;
-
-                MovePlayerHorizontally();
-            }
-
-
-            // decrease knockback counter
-            knockbackCounter -= Time.deltaTime;
+            verticalDirection = -playerVerticalSpeed;
         }
 
 
-
-        // see if player is moving up
-        if (Input.GetKey(KeyCode.Slash))
-        {
-            if (PlayerFuelController._playerFuelControllerInstance.playerCurrentFuel > 0)
-            {
-                verticalDirection = playerSpeed;
-
-                MovePlayerUp();
-            }
-        }
-
-        // otherwise
-        else
-        {
-            // move player down
-            verticalDirection = -playerSpeed;
-
-            MovePlayerDown();
-        }
-        
-
-        // see if player is firing
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            // does player have ammo
-            if (PlayerWeaponController._playerWeaponControllerInstance.playerCurrentAmmo > 0)
-            {
-                FirePlayerBullet();
-            }
-        }
-
-        // continuous fire
         if (Input.GetKey(KeyCode.Space))
         {
-            if (PlayerWeaponController._playerWeaponControllerInstance.playerCurrentAmmo > 0)
-            {
-                if (PlayerWeaponController._playerWeaponControllerInstance.currentWeaponStatus > 0)
-                {
-                    shootDelay -= Time.deltaTime;
-
-                    if (shootDelay <= 0)
-                    {
-                        FirePlayerBullet();
-
-                        PlayerWeaponController._playerWeaponControllerInstance.WeaponOverheat(10);
-                    }
-                }
-            }
+            // fire
         }
 
-        else
+
+        if (Input.GetKeyDown(KeyCode.R))
         {
-            PlayerWeaponController._playerWeaponControllerInstance.WeaponCooldown(1);
+            // unlock door
         }
     }
 
 
-    private void FirePlayerBullet()
+    private void MovePlayer()
     {
-        Instantiate(playerBullet, weaponLauncher.position, weaponLauncher.rotation);
-
-        shootDelay = fireRate;
-
-        PlayerWeaponController._playerWeaponControllerInstance.AmmoRoundsFired();
+        playerRigidbody.linearVelocity = new Vector2(horizontalDirection, verticalDirection);
     }
 
 
-    private void MovePlayerHorizontally()
+    public void EnterNewRoom(int exit)
     {
-        playerRigidbody.linearVelocity = new Vector2(horizontalDirection, playerRigidbody.linearVelocity.y);
+        // move player
+        Vector2 newPlayerPosition;
+
+        //if (GameController.gameController.playerRespawning)
+        //{
+        //    newPlayerPosition.x = playerSpawnPoint[exit].position.x;
+        //    newPlayerPosition.y = playerSpawnPoint[exit].position.y;
+
+        //    PositionPlayer(new Vector2(newPlayerPosition.x, newPlayerPosition.y));
+
+        //    GameController.gameController.playerRespawning = false;
+        //}
+
+        //else
+        //{
+        //    int spawnPoint = GameController.gameController.GetOppositeExit(exit);
+
+        //    newPlayerPosition.x = playerSpawnPoint[spawnPoint].position.x;
+        //    newPlayerPosition.y = playerSpawnPoint[spawnPoint].position.y;
+        //}
+
+        //switch (exit)
+        //{
+        //    case RoomController.NORTH_EXIT: playerSector = NORTH_SECTOR; break;
+        //    case RoomController.SOUTH_EXIT: playerSector = SOUTH_SECTOR; break;
+        //    case RoomController.EAST_EXIT: playerSector = EAST_SECTOR; break;
+        //    case RoomController.WEST_EXIT: playerSector = WEST_SECTOR; break;
+        //}
+
+        //PositionPlayer(new Vector2(newPlayerPosition.x, newPlayerPosition.y));
     }
 
 
-    private void MovePlayerUp()
+    private void PositionPlayer() //(Vector2 position)
     {
-        playerRigidbody.linearVelocity = new Vector2(playerRigidbody.linearVelocity.x, verticalDirection);
+        playerStartPosition = new Vector2(PLAYER_START_POSITION_X, PLAYER_START_POSITION_Y);
 
-        PlayerFuelController._playerFuelControllerInstance.FuelConsumption(1);
+        transform.position = playerStartPosition;
+
+        //playerSpriteRenderer.enabled = true;
+
+        //playerAnimator.SetBool("playerStart", true);
+
+        //yield return new WaitForSeconds(2.5f);
+
+        //playerAnimator.SetBool("playerStart", false);
+
+        //inPlay = true;
     }
 
 
-    private void MovePlayerDown()
-    {
-        playerRigidbody.linearVelocity = new Vector2(playerRigidbody.linearVelocity.x, verticalDirection);
-    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //private void PositionLauncher(float launcherOffset, float launcherRotation)
+    //{
+    //    // set launcher direction
+    //    weaponLauncher.position = new Vector3(transform.position.x + launcherOffset, weaponLauncher.position.y, 0f);
+
+    //    weaponLauncher.eulerAngles = new Vector3(0f, 0f, launcherRotation);
+    //}
+
+
+
+
+    ////    if (!playerMoving)
+    ////    {
+    ////        // set player idle animation
+    ////        playerAnimator.SetBool("Moving Left", false);
+
+    ////        playerAnimator.SetBool("Moving Right", false);
+    ////    }
+
+
+    ////    if (Input.GetKey(KeyCode.Z) || Input.GetKey(KeyCode.X))
+    ////    {
+    ////        if (PlayerFuelController._playerFuelControllerInstance.playerCurrentFuel > 0)
+    ////        {
+    ////            playerMoving = true;
+    ////        }
+    ////    }
+
+    ////    else
+    ////    {
+    ////        playerMoving = false;
+    ////    }
+
+
+    //    // see if player is moving left
+    //    if (Input.GetKey(KeyCode.Z))
+    //    {
+    ////        // does player have fuel
+    ////        if (PlayerFuelController._playerFuelControllerInstance.playerCurrentFuel > 0)
+    ////        {
+    //            // set player's direction to player's speed
+    //            horizontalDirection = -playerSpeed;
+
+    ////            // set launcher direction
+    ////            PositionLauncher(-LAUNCHER_OFFSET, PORT_ROTATION);
+
+    ////            // set animation depending on which way the player is moving
+    ////            playerAnimator.SetBool("Moving Left", true);
+    ////            playerAnimator.SetBool("Moving Right", false);
+
+    ////            // consume fuel while moving
+    ////            PlayerFuelController._playerFuelControllerInstance.FuelConsumption(1);
+    ////        }
+    //    }
+
+
+    //    // see if player is moving right
+    //    if (Input.GetKey(KeyCode.X))
+    //    {
+    ////        // does player have fuel
+    ////        if (PlayerFuelController._playerFuelControllerInstance.playerCurrentFuel > 0)
+    ////        {
+    //            // set player's direction to player's speed
+    //            horizontalDirection = playerSpeed;
+
+    ////            // set launcher direction
+    ////            PositionLauncher(LAUNCHER_OFFSET, STARBOARD_ROTATION);
+
+    ////            // set animation depending on which way the player is moving
+    ////            playerAnimator.SetBool("Moving Left", false);
+    ////            playerAnimator.SetBool("Moving Right", true);
+
+    ////            // consume fuel while moving
+    ////            PlayerFuelController._playerFuelControllerInstance.FuelConsumption(1);
+    ////        }
+    //    }
+
+
+    ////    // if player is not being knocked back
+    ////    if (knockbackCounter <= 0)
+    ////    {
+    ////        // move player
+    //        MovePlayerHorizontally();
+    ////    }
+
+    ////    // otherwise
+    ////    else
+    ////    {
+    ////        // see from which direction player is being knocked back
+    ////        if (leftKnockback)
+    ////        {
+    ////            // knock player to the right
+    ////            horizontalDirection = knockbackForce;
+
+    ////            MovePlayerHorizontally();
+    ////        }
+
+
+    ////        if (!leftKnockback)
+    ////        {
+    ////            // knock player to the left
+    ////            horizontalDirection = -knockbackForce;
+
+    ////            MovePlayerHorizontally();
+    ////        }
+
+
+    ////        // decrease knockback counter
+    ////        knockbackCounter -= Time.deltaTime;
+    ////    }
+
+
+
+    //    // see if player is moving up
+    //    if (Input.GetKey(KeyCode.Slash))
+    //    {
+    //        //        if (PlayerFuelController._playerFuelControllerInstance.playerCurrentFuel > 0)
+    //        //        {
+    //        verticalDirection = playerSpeed;
+
+    //        MovePlayerUp();
+    ////        }
+    //    }
+
+    //    // otherwise
+    //    else
+    //    {
+    //        // move player down
+    //        verticalDirection = -playerSpeed;
+
+    //        MovePlayerDown();
+    //    }
+
+
+    ////    // see if player is firing
+    ////    if (Input.GetKeyDown(KeyCode.Space))
+    ////    {
+    ////        // does player have ammo
+    ////        if (PlayerWeaponController._playerWeaponControllerInstance.playerCurrentAmmo > 0)
+    ////        {
+    ////            FirePlayerBullet();
+    ////        }
+    ////    }
+
+    ////    // continuous fire
+    ////    if (Input.GetKey(KeyCode.Space))
+    ////    {
+    ////        if (PlayerWeaponController._playerWeaponControllerInstance.playerCurrentAmmo > 0)
+    ////        {
+    ////            if (PlayerWeaponController._playerWeaponControllerInstance.currentWeaponStatus > 0)
+    ////            {
+    ////                shootDelay -= Time.deltaTime;
+
+    ////                if (shootDelay <= 0)
+    ////                {
+    ////                    FirePlayerBullet();
+
+    ////                    PlayerWeaponController._playerWeaponControllerInstance.WeaponOverheat(10);
+    ////                }
+    ////            }
+    ////        }
+    ////    }
+
+    ////    else
+    ////    {
+    ////        PlayerWeaponController._playerWeaponControllerInstance.WeaponCooldown(1);
+    ////    }
+    //}
+
+
+    ////private void FirePlayerBullet()
+    ////{
+    ////    Instantiate(playerBullet, weaponLauncher.position, weaponLauncher.rotation);
+
+    ////    shootDelay = fireRate;
+
+    ////    PlayerWeaponController._playerWeaponControllerInstance.AmmoRoundsFired();
+    ////}
 
 
 } // end of class
