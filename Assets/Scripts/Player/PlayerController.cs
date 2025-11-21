@@ -75,11 +75,6 @@ public class PlayerController : MonoBehaviour
     private const float PLAYER_MOVE_SPEED = 2.5f;
     private const float PLAYER_FIRE_RATE = 0.4f;
 
-    // player start position
-    private const float PLAYER_START_POSITION_X = 255.5f;
-    private const float PLAYER_START_POSITION_Y = -53.5f;
-
-
 
     private bool playerIsMoving;
     public bool playerIsFacingRight;
@@ -268,7 +263,7 @@ public class PlayerController : MonoBehaviour
 
     private void PositionPlayer() //(Vector2 position)
     {
-        playerStartPosition = new Vector2(PLAYER_START_POSITION_X, PLAYER_START_POSITION_Y);
+        playerStartPosition = new Vector2(GameController.PLAYER_START_POSITION_X, GameController.PLAYER_START_POSITION_Y);
 
         transform.position = playerStartPosition;
 

@@ -5,10 +5,6 @@ TagManager:
   serializedVersion: 3
   tags:
   - Enemy 1
-  - Player Bullet
-  - West Of The Tower
-  - Top Of The Tower
-  - East Of The Tower
   layers:
   - Default
   - TransparentFX
@@ -20,12 +16,12 @@ TagManager:
   - 
   - 
   - 
-  - 
-  - UI Camera
   - Game Camera
+  - UI Camera
   - Frame Camera
-  - Blanking Camera
-  - Room Name Camera
+  - 
+  - 
+  - 
   - 
   - 
   - 
@@ -46,8 +42,13 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: Player
-    uniqueID: 3459407893
+  - name: Frame Layer
+    uniqueID: 4246770485
+    locked: 0
+  - name: Room Name Layer
+    uniqueID: 637556707
     locked: 0
   m_RenderingLayers:
   - Default
+  - Room Name Layer
+  - Frame Layer
