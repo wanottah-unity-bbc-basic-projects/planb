@@ -4,7 +4,7 @@ using UnityEngine;
 //
 // Plan B [Andrew Foord, 1987] v2023.09.14
 //
-// v2025.11.02
+// v2025.11.22
 //
 
 public class RoomController : MonoBehaviour
@@ -20,6 +20,9 @@ public class RoomController : MonoBehaviour
 
             // display the room name
             CameraController.cameraController.DisplayRoomName(transform);
+
+            // activate destructables
+            CameraController.cameraController.ActivateDestructables(transform);
         }
     }
 

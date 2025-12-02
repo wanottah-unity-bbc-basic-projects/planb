@@ -1,23 +1,12 @@
 ﻿
 using UnityEngine;
-using UnityEngine.UI;
-
-
-/// <summary>
-/// Plan B 2020 Mk i
-/// Port of Plan B for the BBC Model B
-/// by Andrew Foord - Copyright 1987
-/// PlayerBulletController.cs
-/// Adapted from 'Learn to Code By Making a 2D Platformer in Unity'
-/// by James Doyle
-/// Adapted from '2D Platformer Sci-Fi Game in Unity'
-/// by Aaron @ Thinkbot Labs
-/// Created: 26/03/2019
-/// </summary>
 
 //
-// modified 2020-08-06
+// Plan B [Andrew Foord, 1987] v2023.09.14
 //
+// v2025.11.28
+//
+
 
 
 public class PlayerBulletController : MonoBehaviour
@@ -25,14 +14,14 @@ public class PlayerBulletController : MonoBehaviour
     // bullet impact effect
     //public GameObject weaponCollisionParticles;
 
-    //// reference to player's missile rigidbody components
-    //private Rigidbody2D playerBulletRigidbody;
+    // reference to player's missile rigidbody components
+    public Rigidbody2D playerBulletRigidbody;
 
 
 
 
-    //// maximum player ammo
-    ////private int maximumMissiles;
+    // maximum player ammo
+    //private int maximumMissiles;
 
     //// number of pickup missiles
     ////private int pickupMissiles;
@@ -40,8 +29,11 @@ public class PlayerBulletController : MonoBehaviour
     //// ammo counter
     ////public static int missileCount;
 
-    //// speed of bullet
-    //private float playerBulletSpeed;
+    // speed of bullet
+    private float playerBulletSpeed;
+
+    // bullet direction
+    public Vector2 bulletDirection;
 
 
 
@@ -72,36 +64,41 @@ public class PlayerBulletController : MonoBehaviour
 
 
 
-    //private void Awake()
-    //{
-    //    playerBulletRigidbody = GetComponent<Rigidbody2D>();
+    private void Awake()
+    {
+        //playerBulletRigidbody = GetComponent<Rigidbody2D>();
 
     //    //starboardMissileRigidbody = GetComponent<Rigidbody2D>();
-    //}
+    }
 
 
-    //// Initialise ammo
-    //private void Start()
-    //{
-    //    Initialise();
-    //}
+    private void Start()
+    {
+        InitialiseAmmo();
+    }
 
 
-    //private void Initialise()
-    //{
+    private void Update()
+    {
+        playerBulletRigidbody.linearVelocity = bulletDirection * playerBulletSpeed;
+    }
+
+
+    private void InitialiseAmmo()
+    {
     //    //enemyHealthManager = FindObjectOfType<EnemyHealthManager>();
     //    //enemyHealthBar = GetComponent<EnemyHealthManager>();
 
-    //    #region ENEMY VALUES
+        #region ENEMY VALUES
 
-    //    enemyDamage = 50;
+        //enemyDamage = 50;
 
-    //    enemyPoints1 = 1;
+        //enemyPoints1 = 1;
 
-    //    #endregion
+        #endregion
 
 
-    //    playerBulletSpeed = 20f;
+        playerBulletSpeed = 2f;
 
 
 
@@ -129,11 +126,11 @@ public class PlayerBulletController : MonoBehaviour
     //        playerBulletRigidbody.velocity = new Vector2(playerBulletSpeed, playerBulletRigidbody.velocity.y);
     //    }*/
 
-    //    playerBulletRigidbody.linearVelocity = transform.right * playerBulletSpeed;
+        //playerBulletRigidbody.linearVelocity = transform.right * playerBulletSpeed;
 
     //    // Update ammo count
     //    //missileCounter.text = "" + missileCount;
-    //}
+    }
 
 
     //// restore ammo
@@ -143,9 +140,8 @@ public class PlayerBulletController : MonoBehaviour
     //}
 
 
-    //// destroy player bullet when it collides with another object
-    //private void OnTriggerEnter2D(Collider2D objectCollidedWith)
-    //{
+    private void OnTriggerEnter2D(Collider2D objectCollidedWith)
+    {
     //    // check if missile has hit enemy
     //    if (objectCollidedWith.CompareTag("Enemy 1"))
     //    {
@@ -163,31 +159,6 @@ public class PlayerBulletController : MonoBehaviour
     //        //enemyHealthBar.DamageEnemy(playerMissileHitPoints);
     //    }
 
-
-    //    /*if (collidingObject.CompareTag("Small Crate"))
-    //    {
-    //        Destroy(collidingObject.gameObject);
-    //    }
-
-
-    //    // Check if missile has hit enemy
-    //    if (collidingObject.CompareTag("Fuel Pickup"))
-    //    {
-    //        // Kill the enemy
-    //        //Instantiate(enemyDeadParticles, collidingObject.transform.position, collidingObject.transform.rotation);
-
-    //        //Destroy(collidingObject.gameObject);
-    //    }
-
-
-    //    // Check if missile has hit enemy
-    //    if (collidingObject.CompareTag("Green Crate Pickup"))
-    //    {
-    //        // Kill the enemy
-    //        //Instantiate(enemyDeadParticles, collidingObject.transform.position, collidingObject.transform.rotation);
-
-    //        //Destroy(collidingObject.gameObject);
-    //    }
 
 
     //    // Check if missile has hit enemy
@@ -226,8 +197,14 @@ public class PlayerBulletController : MonoBehaviour
     //    // impact effect
     //    Instantiate(weaponCollisionParticles, transform.position, transform.rotation);
 
-    //    Destroy(gameObject);
-    //}
+        Destroy(gameObject);
+    }
+
+
+    private void OnBecameInvisible()
+    {
+        Destroy(gameObject);
+    }
 
 
 } // end of class

@@ -18,12 +18,12 @@ TagManager:
   - 
   - Game Camera
   - UI Camera
-  - Frame Camera
+  - HUD Camera
   - 
+  - Player
+  - Player Bullet
   - 
-  - 
-  - 
-  - 
+  - No Collision
   - 
   - 
   - 

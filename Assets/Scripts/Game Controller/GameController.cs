@@ -5,7 +5,7 @@ using UnityEngine;
 //
 // Plan B [Andrew Foord, 1987] v2023.09.14
 //
-// v2025.11.05
+// v2025.11.23
 //
 
 public class GameController : MonoBehaviour
@@ -212,7 +212,7 @@ public class GameController : MonoBehaviour
     {
         if (!gameOver && !inPawzMode && !inAttractMode)
         {
-            PlayerController.playerController.GetPlayerInput();
+            PlayerController.playerController.GetKeyboardInput();
         }
 
 

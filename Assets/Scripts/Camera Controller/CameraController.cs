@@ -6,7 +6,7 @@ using UnityEngine;
 //
 // Plan B [Andrew Foord, 1987] v2023.09.14
 //
-// v2025.11.04
+// v2025.11.22
 //
 
 public class CameraController : MonoBehaviour
@@ -104,6 +104,21 @@ public class CameraController : MonoBehaviour
 
         // show the room name
         RoomNameController.roomNameController.roomName[(int)arrayPosition].gameObject.SetActive(true);
+    }
+
+
+    public void ActivateDestructables(Transform room)
+    {
+        // get the new room position
+        newRoomName = room;
+
+        // calculate the array position of the room name
+        float arrayPosition = (Mathf.Abs(newRoomName.position.y) / roomHeight) * arrayModifier + (Mathf.Abs(newRoomName.position.x) / roomWidth);
+
+        //Debug.Log(Mathf.Abs(newRoomName.position.x) + ", " + Mathf.Abs(newRoomName.position.y) + ": " + arrayPosition);
+
+        // show the room name
+        DestructableObjectsController.destructableObjectsController.destuctableObjects[(int)arrayPosition].gameObject.SetActive(true);
     }
 
 
