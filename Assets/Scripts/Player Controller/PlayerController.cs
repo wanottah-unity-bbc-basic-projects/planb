@@ -6,7 +6,7 @@ using UnityEngine;
 //
 // Plan B [Andrew Foord, 1987] v2023.09.14
 //
-// v2025.11.28
+// v2025.12.04
 //
 
 public class PlayerController : MonoBehaviour
@@ -44,14 +44,14 @@ public class PlayerController : MonoBehaviour
 
 
     // weapon launcher positions
-    private const float LAUNCHER_OFFSET = 2;
-    private const float PORT_ROTATION = 180f;
-    private const float STARBOARD_ROTATION = 0f;
+    //private const float LAUNCHER_OFFSET = 2;
+    private const float PORT_ROTATION = 0f;
+    private const float STARBOARD_ROTATION = 180f;
 
 
     // player direction
-    private const float FACING_LEFT = 1f;
-    private const float FACING_RIGHT = -1f;
+    private const float FACING_LEFT = -1f;
+    private const float FACING_RIGHT = 1f;
 
     //private const float PLAYER_MOVE_SPEED = 2.5f;
     //private const float PLAYER_FIRE_RATE = 0.4f;
@@ -59,6 +59,7 @@ public class PlayerController : MonoBehaviour
 
     //private bool playerIsMoving;
     //public bool playerIsFacingRight;
+    //public bool playerFacingLeft;
     //private bool playerIsFiring;
     //public bool playerIsDead;
 
@@ -73,9 +74,6 @@ public class PlayerController : MonoBehaviour
     private void Awake()
     {
         playerController = this;
-
-        // get reference to player's rigidbody component
-        //playerRigidbody = GetComponent<Rigidbody2D>();
     }
 
 
@@ -96,12 +94,14 @@ public class PlayerController : MonoBehaviour
         PositionPlayer();
 
         // set player's horizontal and vertical speed
-        playerSpeed = 12f;
+        playerSpeed = 10f;
 
-        fireRate = 0.1f;
+        fireRate = 0.25f;
 
         // set launcher direction
-        PositionLauncher(-LAUNCHER_OFFSET, PORT_ROTATION);
+        PositionLauncher(PORT_ROTATION);
+
+        playerBullet.bulletDirection = new Vector2(FACING_LEFT, 0f);
 
         //PlayerWeaponController.playerWeaponController.InitialisePlayerAmmo();
     }
@@ -123,14 +123,13 @@ public class PlayerController : MonoBehaviour
         // move player left
         if (Input.GetKey(KeyCode.Z))
         {
-            if (Input.GetKey(KeyCode.Z))
-            {
-                // set player's direction to player's speed
-                horizontalDirection = -playerSpeed;
+            // set player's direction to player's speed
+            horizontalDirection = -playerSpeed;
 
-                // set launcher direction
-                PositionLauncher(-LAUNCHER_OFFSET, PORT_ROTATION);
-            }
+            // set launcher direction
+            PositionLauncher(PORT_ROTATION);
+
+            playerBullet.bulletDirection = new Vector2(FACING_LEFT, 0f);
 
             // face player left
             transform.localScale = new Vector3(FACING_LEFT, 1f, 1f);
@@ -142,14 +141,13 @@ public class PlayerController : MonoBehaviour
         // move player right
         if (Input.GetKey(KeyCode.X))
         {
-            if (Input.GetKey(KeyCode.X))
-            {
-                // set player's direction to player's speed
-                horizontalDirection = playerSpeed;
+            // set player's direction to player's speed
+            horizontalDirection = playerSpeed;
 
-                // set launcher direction
-                PositionLauncher(LAUNCHER_OFFSET, STARBOARD_ROTATION);
-            }
+            // set launcher direction
+            PositionLauncher(STARBOARD_ROTATION);
+
+            playerBullet.bulletDirection = new Vector2(FACING_RIGHT, 0f);
 
             // face player right
             transform.localScale = new Vector3(FACING_RIGHT, 1f, 1f);
@@ -179,7 +177,7 @@ public class PlayerController : MonoBehaviour
 
 
         // see if player can fire
-        if (Input.GetKey(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space))
         {
             // does player have ammo
             //if (PlayerWeaponController.playerWeaponController.playerCurrentAmmo > 0)
@@ -189,27 +187,29 @@ public class PlayerController : MonoBehaviour
         }
 
         // continuous fire
-        //if (Input.GetKey(KeyCode.Space))
-        //{
-        //    if (PlayerWeaponController.playerWeaponController.playerCurrentAmmo > 0)
-        //    {
-        //        if (PlayerWeaponController.playerWeaponController.currentWeaponStatus > 0)
-        //        {
-        //            shootDelay -= Time.deltaTime;
+        if (Input.GetKey(KeyCode.Space))
+        {
+            //if (PlayerWeaponController.playerWeaponController.playerCurrentAmmo > 0)
+            //{
+            //if (PlayerWeaponController.playerWeaponController.currentWeaponStatus > 0)
+            //{
+            shootDelay -= Time.deltaTime;
 
-        //            if (shootDelay <= 0)
-        //            {
-        //                FirePlayerBullet();
+            if (shootDelay <= 0)
+            {
+                FirePlayerBullet();
 
-        //                //PlayerWeaponController.playerWeaponController.WeaponOverheat(10);
-        //            }
-        //        }
-        //    }
-        //}
+                //PlayerWeaponController.playerWeaponController.WeaponOverheat(10);
+
+                shootDelay = fireRate;
+            }
+            //}
+            //}
+        }
 
         //else
         //{
-        //    //PlayerWeaponController.playerWeaponController.WeaponCooldown(1);
+            //PlayerWeaponController.playerWeaponController.WeaponCooldown(1);
         //}
 
 
@@ -222,9 +222,9 @@ public class PlayerController : MonoBehaviour
 
     private void FirePlayerBullet()
     {
-        Instantiate(playerBullet, weaponLauncher.position, weaponLauncher.rotation).bulletDirection = new Vector2(transform.localScale.x, 0f);
+        Instantiate(playerBullet, weaponLauncher.position, weaponLauncher.rotation);
 
-        //shootDelay = fireRate;
+        shootDelay = fireRate;
 
         //PlayerWeaponController.playerWeaponController.AmmoRoundsFired();
     }
@@ -248,18 +248,24 @@ public class PlayerController : MonoBehaviour
     }
 
 
-    private void PositionPlayer() //(Vector2 position)
+    private void PositionPlayer()
     {
         playerStartPosition = new Vector2(GameController.PLAYER_START_POSITION_X, GameController.PLAYER_START_POSITION_Y);
 
         transform.position = playerStartPosition;
+
+        // face player left
+        transform.localScale = new Vector3(FACING_LEFT, 1f, 1f);
+
+        scanner.transform.localScale = new Vector3(FACING_LEFT, 1f, 1f);
     }
 
 
-    private void PositionLauncher(float launcherOffset, float launcherRotation)
+    //private void PositionLauncher()  //float launcherOffset, float launcherRotation)
+    private void PositionLauncher(float launcherRotation)
     {
         // set launcher direction
-        weaponLauncher.position = new Vector3(transform.position.x + launcherOffset, weaponLauncher.position.y, 0f);
+        weaponLauncher.position = new Vector3(weaponLauncher.position.x, weaponLauncher.position.y, 0f);
 
         weaponLauncher.eulerAngles = new Vector3(0f, 0f, launcherRotation);
     }

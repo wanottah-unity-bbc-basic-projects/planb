@@ -26,4 +26,13 @@ public class DestructableObjectsController : MonoBehaviour
     }
 
 
+    public void ActivateDestructableObjects(int arrayPosition)
+    {
+        for (int destructableObject = 0; destructableObject < destuctableObjects[arrayPosition].transform.childCount; destructableObject++)
+        {
+            destuctableObjects[arrayPosition].transform.GetChild(destructableObject).gameObject.SetActive(true);
+        }
+    }
+
+
 } // end of class

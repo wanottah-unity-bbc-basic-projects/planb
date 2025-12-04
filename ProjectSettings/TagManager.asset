@@ -5,6 +5,10 @@ TagManager:
   serializedVersion: 3
   tags:
   - Enemy 1
+  - Oil Drum Pickup
+  - Ammo Pickup
+  - Spanner Pickup
+  - Destructable
   layers:
   - Default
   - TransparentFX
@@ -14,7 +18,7 @@ TagManager:
   - UI
   - 
   - 
-  - 
+  - Room Activator
   - 
   - Game Camera
   - UI Camera
@@ -23,7 +27,7 @@ TagManager:
   - Player
   - Player Bullet
   - 
-  - No Collision
+  - 
   - 
   - 
   - 

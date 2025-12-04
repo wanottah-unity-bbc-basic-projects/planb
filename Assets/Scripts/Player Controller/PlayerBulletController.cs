@@ -4,7 +4,7 @@ using UnityEngine;
 //
 // Plan B [Andrew Foord, 1987] v2023.09.14
 //
-// v2025.11.28
+// v2025.12.04
 //
 
 
@@ -33,7 +33,7 @@ public class PlayerBulletController : MonoBehaviour
     private float playerBulletSpeed;
 
     // bullet direction
-    public Vector2 bulletDirection;
+    [HideInInspector] public Vector2 bulletDirection;
 
 
 
@@ -64,13 +64,6 @@ public class PlayerBulletController : MonoBehaviour
 
 
 
-    private void Awake()
-    {
-        //playerBulletRigidbody = GetComponent<Rigidbody2D>();
-
-    //    //starboardMissileRigidbody = GetComponent<Rigidbody2D>();
-    }
-
 
     private void Start()
     {
@@ -80,7 +73,7 @@ public class PlayerBulletController : MonoBehaviour
 
     private void Update()
     {
-        playerBulletRigidbody.linearVelocity = bulletDirection * playerBulletSpeed;
+        MoveBullet();
     }
 
 
@@ -98,7 +91,7 @@ public class PlayerBulletController : MonoBehaviour
         #endregion
 
 
-        playerBulletSpeed = 2f;
+        playerBulletSpeed = 16f;
 
 
 
@@ -133,6 +126,12 @@ public class PlayerBulletController : MonoBehaviour
     }
 
 
+    private void MoveBullet()
+    {
+        playerBulletRigidbody.linearVelocity = bulletDirection * playerBulletSpeed;
+    }
+
+
     //// restore ammo
     //public void MissilePickup()
     //{
@@ -142,60 +141,51 @@ public class PlayerBulletController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D objectCollidedWith)
     {
-    //    // check if missile has hit enemy
-    //    if (objectCollidedWith.CompareTag("Enemy 1"))
-    //    {
-    //        Debug.Log("hit enemy");
-    //        // kill the enemy
-    //        //Instantiate(enemyDeadParticles, collidingObject.transform.position, collidingObject.transform.rotation);
+        //    // check if missile has hit enemy
+        //    if (objectCollidedWith.CompareTag("Enemy 1"))
+        //    {
+        //        Debug.Log("hit enemy");
+        //        // kill the enemy
+        //        //Instantiate(enemyDeadParticles, collidingObject.transform.position, collidingObject.transform.rotation);
 
-    //        //Destroy(collidingObject.gameObject);
-    //        objectCollidedWith.GetComponent<EnemyController>().DamageEnemy(enemyDamage);
+        //        //Destroy(collidingObject.gameObject);
+        //        objectCollidedWith.GetComponent<EnemyController>().DamageEnemy(enemyDamage);
 
-    //        // Update score
-    //        //ScoreManager.AddPoints(enemyPoints01);
+        //        // Update score
+        //        //ScoreManager.AddPoints(enemyPoints01);
 
-    //        //collidingObject.GetComponent<EnemyHealthManager>().DamageEnemy(playerMissileHitPoints);
-    //        //enemyHealthBar.DamageEnemy(playerMissileHitPoints);
-    //    }
-
-
-
-    //    // Check if missile has hit enemy
-    //    if (collidingObject.CompareTag("Ammo Pickup"))
-    //    {
-    //        // Kill the enemy
-    //        //Instantiate(enemyDeadParticles, collidingObject.transform.position, collidingObject.transform.rotation);
-
-    //        //Destroy(collidingObject.gameObject);
-    //    }
+        //        //collidingObject.GetComponent<EnemyHealthManager>().DamageEnemy(playerMissileHitPoints);
+        //        //enemyHealthBar.DamageEnemy(playerMissileHitPoints);
+        //    }
 
 
-    //    // Check if missile has hit enemy
-    //    if (collidingObject.CompareTag("Spanner Pickup"))
-    //    {
-    //        // Kill the enemy
-    //        //Instantiate(enemyDeadParticles, collidingObject.transform.position, collidingObject.transform.rotation);
 
-    //        //Destroy(collidingObject.gameObject);
-    //    }
+        // bullet hit destructable
+        if (objectCollidedWith.CompareTag("Destructable"))
+        {
+            objectCollidedWith.gameObject.SetActive(false);
+        }
 
 
-    //    // Check if missile has hit enemy
-    //    if (collidingObject.CompareTag("Oil Drum Pickup"))
-    //    {
-    //        // Kill the enemy
-    //        //Instantiate(enemyDeadParticles, collidingObject.transform.position, collidingObject.transform.rotation);
+        // bullet hit ammo pickup
+        if (objectCollidedWith.CompareTag("Ammo Pickup"))
+        {
+            Destroy(objectCollidedWith.gameObject);
+        }
 
-    //        //Destroy(collidingObject.gameObject);
-    //    }
-    //    */
 
-    //    // Destroy missile
-    //    //Instantiate(missileCollisionParticles, transform.position, transform.rotation);
+        // bullet hit spanner pickup
+        if (objectCollidedWith.CompareTag("Spanner Pickup"))
+        {
+            Destroy(objectCollidedWith.gameObject);
+        }
 
-    //    // impact effect
-    //    Instantiate(weaponCollisionParticles, transform.position, transform.rotation);
+
+        // bullet hit oil drum pickup
+        if (objectCollidedWith.CompareTag("Oil Drum Pickup"))
+        {
+            Destroy(objectCollidedWith.gameObject);
+        }
 
         Destroy(gameObject);
     }

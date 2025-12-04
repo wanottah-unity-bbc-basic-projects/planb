@@ -179,7 +179,7 @@ public class GameController : MonoBehaviour
         }
 
         // start game
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.S))  //pace))
         {
             inAttractMode = false;
 
