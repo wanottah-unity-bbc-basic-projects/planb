@@ -4,11 +4,11 @@
 TagManager:
   serializedVersion: 3
   tags:
-  - Enemy 1
-  - Oil Drum Pickup
+  - Destructable
   - Ammo Pickup
   - Spanner Pickup
-  - Destructable
+  - Oil Drum Pickup
+  - Enemy 1
   layers:
   - Default
   - TransparentFX
@@ -18,21 +18,21 @@ TagManager:
   - UI
   - 
   - 
-  - Room Activator
+  - 
   - 
   - Game Camera
   - UI Camera
   - HUD Camera
   - 
+  - 
   - Player
   - Player Bullet
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Enemy
+  - Enemy Bullet
+  - Destructables
+  - Ignore Bullets
+  - Pickups
+  - Room Layout
   - 
   - 
   - 
@@ -46,13 +46,23 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: Frame Layer
-    uniqueID: 4246770485
+  - name: Ground
+    uniqueID: 2529462545
     locked: 0
-  - name: Room Name Layer
-    uniqueID: 637556707
+  - name: Destructables
+    uniqueID: 86936489
+    locked: 0
+  - name: Pickups
+    uniqueID: 2114511281
+    locked: 0
+  - name: Enemy
+    uniqueID: 3185674953
+    locked: 0
+  - name: Bullets
+    uniqueID: 458111269
+    locked: 0
+  - name: Player
+    uniqueID: 4152298653
     locked: 0
   m_RenderingLayers:
   - Default
-  - Room Name Layer
-  - Frame Layer

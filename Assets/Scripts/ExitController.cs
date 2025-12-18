@@ -14,7 +14,7 @@ public class ExitController : MonoBehaviour
 {
     public Transform destinationSector;
 
-    public PlayerSpawnController destinationSpawnPoint;
+    //public PlayerSpawnController destinationSpawnPoint;
 
 
 
@@ -32,7 +32,7 @@ public class ExitController : MonoBehaviour
         {
             MoveCameraToSector(destinationSector);
 
-            destinationSpawnPoint.MovePlayerToSpawnPoint();
+            //destinationSpawnPoint.MovePlayerToSpawnPoint();
         }
     }
 

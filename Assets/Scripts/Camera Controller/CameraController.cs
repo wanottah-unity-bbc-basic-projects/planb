@@ -6,7 +6,7 @@ using UnityEngine;
 //
 // Plan B [Andrew Foord, 1987] v2023.09.14
 //
-// v2025.12.04
+// v2025.12.17
 //
 
 public class CameraController : MonoBehaviour

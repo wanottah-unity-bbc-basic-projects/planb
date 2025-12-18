@@ -1,27 +1,15 @@
 ﻿
 using UnityEngine;
-using UnityEngine.UI;
-
-
-/// <summary>
-/// Plan B 2020 Mk i
-/// Port of Plan B for the BBC Model B 
-/// by Andrew Foord - Copyright 1987
-/// PlayerHealthController.cs
-/// Adapted from 'Learn to Code By Making a 2D Platformer in Unity'
-/// by James Doyle
-/// Adapted from '2D Platformer Sci-Fi Game in Unity'
-/// by Aaron @ Thinkbot Labs
-/// Created: 22/03/2019
-/// </summary>
 
 //
-// modified 2020-08-10
+// Plan B [Andrew Foord, 1987] v2023.09.14
+//
+// v2025.12.18
 //
 
 public class PlayerEnergyController : MonoBehaviour
 {
-    //public static PlayerEnergyController _playerEnergyControllerInstance;
+    public static PlayerEnergyController playerEnergyController;
 
 
     //// reference to game over ui
@@ -35,90 +23,93 @@ public class PlayerEnergyController : MonoBehaviour
 
 
 
-    //// player's maximum health
-    //private int playerMaximumEnergy;
+    // player's maximum health
+    private int playerMaximumEnergy;
 
-    //// player's current health
-    //[SerializeField] private float playerCurrentEnergy;
-
-
-
-    //private void Awake()
-    //{
-    //    _playerEnergyControllerInstance = this;
-    //}
+    // player's current health
+    private float playerCurrentEnergy;
 
 
 
-    //private void Start()
-    //{
-    //    Initialise();
-    //}
+    private void Awake()
+    {
+        playerEnergyController = this;
+    }
 
 
-
-    //private void Initialise()
-    //{
-    //    playerMaximumEnergy = 100;
-
-    //    playerCurrentEnergy = playerMaximumEnergy;
-
-    //    HudController._hudControllerInstance.energySlider.maxValue = playerMaximumEnergy;
-
-    //    UpdateEnergyValueText();
-    //}
+    private void Start()
+    {
+        Initialise();
+    }
 
 
-    //public void DamagePlayer(float damage)
-    //{
-    //    if (PlayerShieldController._playerShieldsControllerInstance.playerCurrentShields > 0)
-    //    {
-    //        PlayerShieldController._playerShieldsControllerInstance.DamageShields(damage);
-    //    }
+    private void Initialise()
+    {
+        playerMaximumEnergy = 1; // 100;
 
-    //    else
-    //    {
-    //        playerCurrentEnergy -= damage;
+        playerCurrentEnergy = playerMaximumEnergy;
 
-    //        UpdateEnergyValueText();
-    //    }
-    //}
+        UIController.uiController.energySlider.maxValue = playerMaximumEnergy;
+
+        UpdateEnergySlider();
+    }
 
 
-    //public void HealPlayer(int energy)
-    //{
-    //    playerCurrentEnergy += energy;
+    public void DamagePlayer()
+    {
+        //    if (PlayerShieldController._playerShieldsControllerInstance.playerCurrentShields > 0)
+        //    {
+        //        PlayerShieldController._playerShieldsControllerInstance.DamageShields(damage);
+        //    }
 
-    //    if (playerCurrentEnergy > playerMaximumEnergy)
-    //    {
-    //        playerCurrentEnergy = playerMaximumEnergy;
-    //    }
+        //    else
+        //    {
+        //        playerCurrentEnergy -= damage;
 
-    //    UpdateEnergyValueText();
-    //}
-
-
-    //private void UpdateEnergyValueText()
-    //{
-    //    float energyPercentage = (playerCurrentEnergy / playerMaximumEnergy) * 100;
-
-    //    HudController._hudControllerInstance.energyValueText.text = ((int)energyPercentage).ToString() + "%";
-
-    //    HudController._hudControllerInstance.energySlider.value = playerCurrentEnergy;
+        //        UpdateEnergyValueText();
+        //    }
 
 
-    //    // check if player is dead
-    //    if (playerCurrentEnergy <= 0)
-    //    {
-    //        // disable player controller
-    //        //PlayerController._playerControllerInstance.gameObject.SetActive(false);
+        playerCurrentEnergy--;
 
-    //        Instantiate(destroyedParticles, player.position, player.rotation);
+        UpdateEnergySlider();
 
-    //        // Display Game Over UI
-    //        //gameOverUI.gameObject.SetActive(true);
-    //    }
-    //}
+            // check if player is dead
+        if (playerCurrentEnergy <= 0)
+        {
+            
+                    // disable player controller
+            PlayerController.playerController.gameObject.SetActive(false);
+
+            //        Instantiate(destroyedParticles, player.position, player.rotation);
+
+            //        // Display Game Over UI
+            //        //gameOverUI.gameObject.SetActive(true);
+        }
+    }
+
+
+    public void HealPlayer(int energy)
+    {
+        playerCurrentEnergy += energy;
+
+        if (playerCurrentEnergy > playerMaximumEnergy)
+        {
+            playerCurrentEnergy = playerMaximumEnergy;
+        }
+
+        UpdateEnergySlider();
+    }
+
+
+    private void UpdateEnergySlider()
+    {
+        float energyPercentage = (playerCurrentEnergy / playerMaximumEnergy) * 100;
+
+        UIController.uiController.energyText.text = ((int)energyPercentage).ToString() + "%";
+
+        UIController.uiController.energySlider.value = playerCurrentEnergy;
+    }
 
 
 } // end of class

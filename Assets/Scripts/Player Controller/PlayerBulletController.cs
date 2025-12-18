@@ -4,10 +4,8 @@ using UnityEngine;
 //
 // Plan B [Andrew Foord, 1987] v2023.09.14
 //
-// v2025.12.04
+// v2025.12.16
 //
-
-
 
 public class PlayerBulletController : MonoBehaviour
 {
@@ -32,9 +30,6 @@ public class PlayerBulletController : MonoBehaviour
     // speed of bullet
     private float playerBulletSpeed;
 
-    // bullet direction
-    [HideInInspector] public Vector2 bulletDirection;
-
 
 
 
@@ -46,7 +41,8 @@ public class PlayerBulletController : MonoBehaviour
     //// enemy points
     //private int enemyPoints1;
 
-    //private int enemyDamage;
+    // damage to enemy
+    public int damageToEnemy;
 
     //// Missile hit points
     //public int playerMissileHitPoints;
@@ -79,19 +75,21 @@ public class PlayerBulletController : MonoBehaviour
 
     private void InitialiseAmmo()
     {
-    //    //enemyHealthManager = FindObjectOfType<EnemyHealthManager>();
-    //    //enemyHealthBar = GetComponent<EnemyHealthManager>();
+        playerBulletSpeed = 16f;
 
-        #region ENEMY VALUES
 
-        //enemyDamage = 50;
+
+        //    //enemyHealthManager = FindObjectOfType<EnemyHealthManager>();
+        //    //enemyHealthBar = GetComponent<EnemyHealthManager>();
+
+        damageToEnemy = 1;
 
         //enemyPoints1 = 1;
 
-        #endregion
 
+        
 
-        playerBulletSpeed = 16f;
+        
 
 
 
@@ -105,21 +103,6 @@ public class PlayerBulletController : MonoBehaviour
 
 
     //    // Update ammo display
-    //    //private void Update()
-    //    //{
-
-
-    //    /*if (PlayerController.playerFacingLeft)
-    //    {
-    //        playerBulletRigidbody.velocity = new Vector2(-playerBulletSpeed, playerBulletRigidbody.velocity.y);
-    //    }
-
-    //    else
-    //    {
-    //        playerBulletRigidbody.velocity = new Vector2(playerBulletSpeed, playerBulletRigidbody.velocity.y);
-    //    }*/
-
-        //playerBulletRigidbody.linearVelocity = transform.right * playerBulletSpeed;
 
     //    // Update ammo count
     //    //missileCounter.text = "" + missileCount;
@@ -128,7 +111,7 @@ public class PlayerBulletController : MonoBehaviour
 
     private void MoveBullet()
     {
-        playerBulletRigidbody.linearVelocity = bulletDirection * playerBulletSpeed;
+        playerBulletRigidbody.linearVelocity = transform.right * playerBulletSpeed;
     }
 
 
@@ -141,28 +124,29 @@ public class PlayerBulletController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D objectCollidedWith)
     {
-        //    // check if missile has hit enemy
-        //    if (objectCollidedWith.CompareTag("Enemy 1"))
-        //    {
+            // bullet hit enemy 1
+            if (objectCollidedWith.CompareTag("Enemy 1"))
+            {
         //        Debug.Log("hit enemy");
         //        // kill the enemy
         //        //Instantiate(enemyDeadParticles, collidingObject.transform.position, collidingObject.transform.rotation);
 
         //        //Destroy(collidingObject.gameObject);
-        //        objectCollidedWith.GetComponent<EnemyController>().DamageEnemy(enemyDamage);
+                objectCollidedWith.GetComponent<EnemyController>().DamageEnemy(damageToEnemy);
 
         //        // Update score
         //        //ScoreManager.AddPoints(enemyPoints01);
 
         //        //collidingObject.GetComponent<EnemyHealthManager>().DamageEnemy(playerMissileHitPoints);
         //        //enemyHealthBar.DamageEnemy(playerMissileHitPoints);
-        //    }
+            }
 
 
 
         // bullet hit destructable
         if (objectCollidedWith.CompareTag("Destructable"))
         {
+            // disable destructable
             objectCollidedWith.gameObject.SetActive(false);
         }
 
@@ -170,6 +154,7 @@ public class PlayerBulletController : MonoBehaviour
         // bullet hit ammo pickup
         if (objectCollidedWith.CompareTag("Ammo Pickup"))
         {
+            // destroy ammo pickup
             Destroy(objectCollidedWith.gameObject);
         }
 
@@ -177,6 +162,7 @@ public class PlayerBulletController : MonoBehaviour
         // bullet hit spanner pickup
         if (objectCollidedWith.CompareTag("Spanner Pickup"))
         {
+            // destroy spanner pickup
             Destroy(objectCollidedWith.gameObject);
         }
 
@@ -184,13 +170,17 @@ public class PlayerBulletController : MonoBehaviour
         // bullet hit oil drum pickup
         if (objectCollidedWith.CompareTag("Oil Drum Pickup"))
         {
+            // destroy oil drum pickup
             Destroy(objectCollidedWith.gameObject);
         }
 
+
+        // destroy player bullet
         Destroy(gameObject);
     }
 
 
+    // when the player bullet goes off screen
     private void OnBecameInvisible()
     {
         Destroy(gameObject);

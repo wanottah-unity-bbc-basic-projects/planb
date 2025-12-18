@@ -1,11 +1,13 @@
 ﻿
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 //
 // Plan B [Andrew Foord, 1987] v2023.09.14
 //
-// v2025.11.23
+// v2025.12.07
 //
 
 public class GameController : MonoBehaviour
@@ -23,6 +25,13 @@ public class GameController : MonoBehaviour
 
     // get a reference to the audio source component
     [HideInInspector] public AudioSource audioPlayer;
+
+
+    // new input system
+    private PlayerInputActions playerControls;
+
+    private InputAction spaceBar;
+
 
 
 
@@ -113,6 +122,22 @@ public class GameController : MonoBehaviour
     private void Awake()
     {
         gameController = this;
+
+        playerControls = new PlayerInputActions();
+    }
+
+
+    private void OnEnable()
+    {
+        spaceBar = playerControls.Player.SpaceBar;
+
+        spaceBar.Enable();
+    }
+
+
+    private void OnDisable()
+    {
+        spaceBar.Disable();
     }
 
 
@@ -178,8 +203,10 @@ public class GameController : MonoBehaviour
             return;
         }
 
+
         // start game
-        if (Input.GetKeyDown(KeyCode.S))  //pace))
+        //if (Input.GetKeyDown(KeyCode.S))  //pace))
+        if (playerControls.Player.SpaceBar.ReadValue<float>() > 0)
         {
             inAttractMode = false;
 
@@ -191,7 +218,6 @@ public class GameController : MonoBehaviour
         }
 
 
-
         // if the game is in play
         if (inPlayMode)
         {
@@ -199,7 +225,8 @@ public class GameController : MonoBehaviour
             if (!gamePawzed)
             {
                 // and the player has pressed the 'O' key
-                if (Input.GetKeyDown(KeyCode.O))
+                //if (Input.GetKeyDown(KeyCode.O))
+                if (playerControls.Player.Pawz.ReadValue<float>() > 0)
                 {
                     GameScreenController.gameScreenController.PawzGame();
                 }
@@ -218,14 +245,12 @@ public class GameController : MonoBehaviour
 
 
 
-        if (Input.GetKeyDown(KeyCode.F))
-        {
-            score = 1234567;
+        //if (Input.GetKeyDown(KeyCode.F))
+        //{
+            //score = 1234567;
 
-            DisplayScore(score);
-        }
-
-
+            //DisplayScore(score);
+        //}
 
     }
 
